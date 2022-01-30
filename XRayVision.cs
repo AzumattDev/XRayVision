@@ -13,14 +13,14 @@ namespace XRayVision
     [BepInPlugin(ModGuid, ModName, ModVersion)]
     public class XRayVisionPlugin : BaseUnityPlugin
     {
-        public const string ModVersion = "1.0.0";
+        public const string ModVersion = "1.0.1";
         public const string ModName = "XRayVision";
         internal const string Author = "Azumatt";
         private const string ModGuid = "azumatt.XRayVision";
         private static string ConfigFileName = ModGuid + ".cfg";
         private static string ConfigFileFullPath = Paths.ConfigPath + Path.DirectorySeparatorChar + ConfigFileName;
 
-        internal static bool isAdmin = true;
+        internal static bool isAdmin = false;
         internal static string ConnectionError = "";
         internal static Dictionary<long, string> PList = new();
 

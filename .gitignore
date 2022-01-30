@@ -1,0 +1,6 @@
+bin
+obj
+/packages
+XRayVision.sln.DotSettings.user
+.idea
+.vs

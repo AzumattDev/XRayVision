@@ -43,8 +43,8 @@ namespace XRayVision
                 "Color of the Piece Name Hover text.", false);
             _createdColor = config("Colors", "Created Time Color", "#078282FF",
                 "Color of the Created Time Hover text.", false);
-            _creatorIDColor = config("Colors", "CreatorID Color", "#00afd4",
-                "Color of the Created Time Hover text.", false);
+            _creatorIDColor = config("Colors", "Creator ID Color", "#00afd4",
+                "Color of the Creator ID Hover text.", false);
             _creatorNameColor = config("Colors", "Creator Name Color", "#00afd4",
                 "Color of the Creator Name Hover text.", false);
             _creatorSteamInfoColor = config("Colors", "Creator Steam Info Color", "#95DBE5FF",

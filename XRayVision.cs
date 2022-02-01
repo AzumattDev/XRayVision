@@ -7,6 +7,7 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using ServerSync;
+using UnityEngine;
 
 namespace XRayVision
 {
@@ -37,6 +38,10 @@ namespace XRayVision
             _serverConfigLocked = config("General", "Force Server Config", true, "Force Server Config");
             _ = configSync?.AddLockingConfigEntry(_serverConfigLocked);
 
+            _disableVisuals = config("General", "Disable XRayVision", KeyboardShortcut.Empty,
+                new ConfigDescription(
+                    "Custom shortcut to enable or disable the hover text.",
+                    new AcceptableShortcuts()), false);
             _prefabNameColor = config("Colors", "Prefab Name Color", "#339E66FF",
                 "Color of the Prefab Name Hover text.", false);
             _pieceNameColor = config("Colors", "Piece Name Color", "#339E66FF",
@@ -99,6 +104,7 @@ namespace XRayVision
         #region ConfigSetup
 
         private static ConfigEntry<bool>? _serverConfigLocked;
+        public static ConfigEntry<KeyboardShortcut>? _disableVisuals;
         internal static ConfigEntry<string>? _prefabNameColor;
         internal static ConfigEntry<string>? _pieceNameColor;
         internal static ConfigEntry<string>? _createdColor;
@@ -134,6 +140,19 @@ namespace XRayVision
         private class ConfigurationManagerAttributes
         {
             public bool? Browsable = false;
+        }
+
+        class AcceptableShortcuts : AcceptableValueBase
+        {
+            public AcceptableShortcuts() : base(typeof(KeyboardShortcut))
+            {
+            }
+
+            public override object Clamp(object value) => value;
+            public override bool IsValid(object value) => true;
+
+            public override string ToDescriptionString() =>
+                "# Acceptable values: " + string.Join(", ", KeyboardShortcut.AllKeyCodes);
         }
 
         #endregion

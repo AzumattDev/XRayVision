@@ -44,7 +44,8 @@ namespace XRayVision.Utilities.RPCShit
                 {
                     XRayVisionPlugin.isAdmin = true;
 
-                    XRayVisionPlugin.XRayLogger.LogInfo($"Local Play Detected setting Admin: {XRayVisionPlugin.isAdmin}");
+                    XRayVisionPlugin.XRayLogger.LogInfo(
+                        $"Local Play Detected setting Admin: {XRayVisionPlugin.isAdmin}");
                 }
 
                 if (ZRoutedRpc.instance == null || !ZNetScene.instance)

@@ -42,6 +42,9 @@
 * Force Server Config [Synced with Server]
     * Force Server Config
         * Default value: true
+* Disable XRayVision [Not Synced with Server]
+    * Custom shortcut to enable or disable the hover text
+        * Default value: Not Set
 
 > ## Installation Instructions
 ***You must have BepInEx installed correctly! I can not stress this enough.***

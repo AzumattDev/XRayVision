@@ -18,7 +18,8 @@ namespace XRayVision.Utilities.RPCShit
                 if (!ZNet.instance.IsDedicated() && ZNet.instance.IsServer())
                 {
                     XRayVisionPlugin.isAdmin = true;
-                    XRayVisionPlugin.XRayLogger.LogDebug($"Local Play Detected setting Admin:{XRayVisionPlugin.isAdmin}");
+                    XRayVisionPlugin.XRayLogger.LogDebug(
+                        $"Local Play Detected setting Admin:{XRayVisionPlugin.isAdmin}");
                 }
 
                 //string str = ((ZSteamSocket)peer.m_socket).GetPeerID().m_SteamID.ToString();

@@ -84,5 +84,7 @@ For Questions or Comments, find me﻿ in the Odin Plus Team Discord:
 
 ***
 > # Update Information (Latest listed first)
+> ### v1.1.0
+> - Add Hotkey to toggle hover text. Added at the request of Khordus in OdinPlus discord. Default is not set. Set this yourself.
 > ### v1.0.0/v1.0.1
 > - Initial Release

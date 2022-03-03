@@ -10,7 +10,7 @@ namespace XRayVision.Patches
         static void Postfix(Player __instance)
         {
             string? steamID = readLocalSteamID();
-            if (__instance.m_nview.GetZDO() == null || __instance.GetPlayerID() != 0L)
+            if (__instance.m_nview.GetZDO() == null )
                 return;
             __instance.m_nview?.GetZDO()
                 .Set("steamName", SteamFriends.GetPersonaName());

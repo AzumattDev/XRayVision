@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using BepInEx;
@@ -14,7 +15,7 @@ namespace XRayVision
     [BepInPlugin(ModGuid, ModName, ModVersion)]
     public class XRayVisionPlugin : BaseUnityPlugin
     {
-        public const string ModVersion = "1.1.0";
+        public const string ModVersion = "1.2.0";
         public const string ModName = "XRayVision";
         internal const string Author = "Azumatt";
         private const string ModGuid = "azumatt.XRayVision";
@@ -61,8 +62,10 @@ namespace XRayVision
 
             _harmony = new Harmony(ModGuid);
             _harmony.PatchAll();
+
             SetupWatcher();
         }
+        
 
         private void OnDestroy()
         {
@@ -94,12 +97,7 @@ namespace XRayVision
                 XRayLogger.LogError("Please check your config entries for spelling and format!");
             }
         }
-
-        private void Start()
-        {
-            if (Chainloader.PluginInfos.ContainsKey("azumatt.WardIsLove"))
-                WardIsLoveAssembly = Chainloader.PluginInfos["azumatt.WardIsLove"].Instance.GetType().Assembly;
-        }
+        
 
         #region ConfigSetup
 

@@ -8,10 +8,13 @@ namespace XRayVision.Utilities
     {
         public static bool HoverTextDisplay = true;
 
-        public static string AddHoverText(GameObject obj, ref string __result)
+        public static string AddHoverText(GameObject gobj, ref string __result)
         {
-            StringBuilder stringBuilder = new();
-
+            StringBuilder
+                stringBuilder =
+                    new(); // Mimic the way they add text in PrivateArea script. I'm the ward Guy after all :)
+            GameObject obj = gobj.transform.root.gameObject; // Always get the top-most parent 
+            ZNetView view = obj.GetComponent<ZNetView>();
             switch (XRayVisionPlugin.isAdmin)
             {
                 /* Colored text examples https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/StyledText.html */
@@ -24,54 +27,43 @@ namespace XRayVision.Utilities
                         HoverTextDisplay = false;
                     }
 
-                    try
+                    if (!view || !view.IsValid()) return __result += "\n\n" + stringBuilder;
+                    stringBuilder.Append(
+                        $"\n<color={XRayVisionPlugin._prefabNameColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Prefab Name{XRayVisionPlugin._rightSeperator.Value}  {(view?.GetPrefabName())}</color>");
+                    if (obj.GetComponent<Piece>())
                     {
-                        ZNetView view = obj.GetComponent<ZNetView>();
                         stringBuilder.Append(
-                            $"\n<color={XRayVisionPlugin._prefabNameColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Prefab Name{XRayVisionPlugin._rightSeperator.Value}  {(view ? view?.GetPrefabName() : obj.name)}</color>");
-                        if (obj.GetComponent<Piece>())
-                        {
-                            stringBuilder.Append(
-                                $"\n<color={XRayVisionPlugin._pieceNameColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Piece Name{XRayVisionPlugin._rightSeperator.Value}   {obj.GetComponent<Piece>().m_name}</color>");
-                        }
-
-                        stringBuilder
-                            .Append(
-                                $"\n<color={XRayVisionPlugin._createdColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Created{XRayVisionPlugin._rightSeperator.Value}  ")
-                            .Append(
-                                DateTimeOffset.Now
-                                    .AddTicks(view.m_zdo.m_timeCreated -
-                                              (long)(ZNet.instance.m_netTime * 10000000))
-                                    .ToString("g"))
-                            .Append("</color>");
-
-
-                        if (view.m_zdo.m_longs
-                                .TryGetValue("creator".GetStableHashCode(), out long creator) &&
-                            view?.m_zdo.m_longs != null)
-                        {
-                            stringBuilder.Append(
-                                $"\n<color={XRayVisionPlugin._creatorIDColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Creator ID{XRayVisionPlugin._rightSeperator.Value}  {creator}</color>");
-                        }
-
-                        if (view?.m_zdo.GetString("creatorName").Length > 1)
-                            stringBuilder.Append(
-                                $"\n<color={XRayVisionPlugin._creatorNameColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Creator Name{XRayVisionPlugin._rightSeperator.Value}  {view?.m_zdo.GetString("creatorName")}</color>");
-                        if (view?.m_zdo.GetString("steamName").Length > 1)
-                            stringBuilder.Append(
-                                $"\n<color={XRayVisionPlugin._creatorSteamInfoColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Creator Steam Info{XRayVisionPlugin._rightSeperator.Value}  {view?.m_zdo.GetString("steamName")} × {view?.m_zdo.GetString("steamID")}</color>");
+                            $"\n<color={XRayVisionPlugin._pieceNameColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Piece Name{XRayVisionPlugin._rightSeperator.Value}   {obj.GetComponent<Piece>().m_name}</color>");
                     }
-                    catch
+
+                    stringBuilder
+                        .Append(
+                            $"\n<color={XRayVisionPlugin._createdColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Created{XRayVisionPlugin._rightSeperator.Value}  ")
+                        .Append(DateTimeOffset.Now
+                            .AddTicks(view.m_zdo.m_timeCreated - ZNet.instance.GetTime().Ticks)
+                            .ToString("g"))
+                        .Append("</color>");
+
+
+                    if (view.m_zdo.m_longs != null)
                     {
-                        // Don't really care if this fails.
+                        stringBuilder.Append(
+                            $"\n<color={XRayVisionPlugin._creatorIDColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Creator ID{XRayVisionPlugin._rightSeperator.Value}  {view.GetZDO().GetLong("creator".GetStableHashCode())}</color>"); // Mimic piece component's grabbing of creator
                     }
+
+
+                    if (view?.m_zdo.GetString("creatorName").Length > 1)
+                        stringBuilder.Append(
+                            $"\n<color={XRayVisionPlugin._creatorNameColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Creator Name{XRayVisionPlugin._rightSeperator.Value}  {view?.m_zdo.GetString("creatorName")}</color>");
+
+
+                    if (view?.m_zdo.GetString("steamName").Length > 1)
+                        stringBuilder.Append(
+                            $"\n<color={XRayVisionPlugin._creatorSteamInfoColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Creator Steam Info{XRayVisionPlugin._rightSeperator.Value}  {view?.m_zdo.GetString("steamName")} × {view?.m_zdo.GetString("steamID")}</color>");
 
                     return __result += "\n\n" + stringBuilder;
                 case true when !HoverTextDisplay:
-                    stringBuilder.Append(
-                        Localization.instance.Localize(
-                            $"\n[<color=yellow><b>{XRayVisionPlugin._disableVisuals.Value}</b></color>] $piece_guardstone_activate XRayVision"));
-                    if (XRayVisionPlugin._disableVisuals.Value.IsDown())
+                    if (XRayVisionPlugin._disableVisuals != null && XRayVisionPlugin._disableVisuals.Value.IsDown())
                     {
                         HoverTextDisplay = true;
                     }
@@ -82,7 +74,7 @@ namespace XRayVision.Utilities
             }
         }
 
-        public static string AddPlayerHoverText(GameObject obj, ref string __result)
+        public static string AddPlayerHoverText(GameObject gobj, ref string __result)
         {
             switch (XRayVisionPlugin.isAdmin)
             {
@@ -95,10 +87,12 @@ namespace XRayVision.Utilities
                     }
 
                     StringBuilder stringBuilder = new();
+                    GameObject obj = gobj.transform.root.gameObject;
                     try
                     {
                         ZNetView view = obj.GetComponent<ZNetView>();
-                        if (obj.GetComponent<Player>().IsCrouching())
+                        if (obj.GetComponent<Player>()
+                            .IsCrouching()) // If they are crouching, I still want to see the name.
                             stringBuilder.Append(
                                 $"<color=#00afd4>{XRayVisionPlugin._leftSeperator.Value}Name{XRayVisionPlugin._rightSeperator.Value}  {(view ? obj.GetComponent<Player>().GetPlayerName() : obj.name)}</color>");
                         stringBuilder.Append(
@@ -108,8 +102,7 @@ namespace XRayVision.Utilities
                                 $"\n<color=#95DBE5FF>{XRayVisionPlugin._leftSeperator.Value}Last Spawned{XRayVisionPlugin._rightSeperator.Value}  ")
                             .Append(
                                 DateTimeOffset.Now
-                                    .AddTicks(view.m_zdo.m_timeCreated -
-                                              (long)(ZNet.instance.m_netTime * 10000000))
+                                    .AddTicks(view.m_zdo.m_timeCreated - ZNet.instance.GetTime().Ticks)
                                     .ToString("g"))
                             .Append("</color>");
                         if (view?.m_zdo.GetString("steamName").Length > 1)

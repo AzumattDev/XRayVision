@@ -55,6 +55,8 @@ namespace XRayVision
                 "Color of the Creator Name Hover text.", false);
             _creatorSteamInfoColor = config("Colors", "Creator Steam Info Color", "#95DBE5FF",
                 "Color of the Steam Information Hover text.", false);
+            _ownerColor = config("Colors", "Owner Info Color", "#c1eaf0",
+                "Color of the Owner Hover text.", false);
             _leftSeperator = config("Attribute Wrapper", "Left", "「",
                 "Text to be shown to the left of the attribute labels", false);
             _rightSeperator = config("Attribute Wrapper", "Right", "」",
@@ -109,6 +111,7 @@ namespace XRayVision
         internal static ConfigEntry<string>? _creatorIDColor;
         internal static ConfigEntry<string>? _creatorNameColor;
         internal static ConfigEntry<string>? _creatorSteamInfoColor;
+        internal static ConfigEntry<string>? _ownerColor;
         internal static ConfigEntry<string>? _leftSeperator;
         internal static ConfigEntry<string>? _rightSeperator;
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -52,14 +53,17 @@ namespace XRayVision.Utilities
                     }
 
 
-                    if (view?.m_zdo.GetString("creatorName").Length > 1)
+                    if (view.m_zdo.GetString("creatorName").Length > 1)
                         stringBuilder.Append(
-                            $"\n<color={XRayVisionPlugin._creatorNameColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Creator Name{XRayVisionPlugin._rightSeperator.Value}  {view?.m_zdo.GetString("creatorName")}</color>");
+                            $"\n<color={XRayVisionPlugin._creatorNameColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Creator Name{XRayVisionPlugin._rightSeperator.Value}  {view.m_zdo.GetString("creatorName")}</color>");
 
 
-                    if (view?.m_zdo.GetString("steamName").Length > 1)
+                    if (view.m_zdo.GetString("steamName").Length > 1)
                         stringBuilder.Append(
-                            $"\n<color={XRayVisionPlugin._creatorSteamInfoColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Creator Steam Info{XRayVisionPlugin._rightSeperator.Value}  {view?.m_zdo.GetString("steamName")} × {view?.m_zdo.GetString("steamID")}</color>");
+                            $"\n<color={XRayVisionPlugin._creatorSteamInfoColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Creator Steam Info{XRayVisionPlugin._rightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}</color>");
+
+                    stringBuilder.Append(
+                            $"\n<color={XRayVisionPlugin._ownerColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Owner{XRayVisionPlugin._rightSeperator.Value}  {GetOwnerText(view)}</color>");
 
                     return __result += "\n\n" + stringBuilder;
                 case true when !HoverTextDisplay:
@@ -72,6 +76,17 @@ namespace XRayVision.Utilities
                 default:
                     return __result;
             }
+        }
+
+        private static string GetOwnerText(ZNetView view) {
+            ZNet.PlayerInfo? owner = ZNet.instance.m_players.Where(i => i.m_characterID.userID == view.m_zdo.m_owner).Cast<ZNet.PlayerInfo?>().FirstOrDefault();
+
+            if (owner == null) {
+                return "-";
+            }
+
+            string ownerIsMe = view.IsOwner() ? "(Me)" : "";
+            return $"{owner?.m_name}, {view.m_zdo.m_owner} {ownerIsMe}";
         }
 
         public static string AddPlayerHoverText(GameObject gobj, ref string __result)

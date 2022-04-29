@@ -37,6 +37,12 @@ namespace XRayVision.Utilities
                             $"\n<color={XRayVisionPlugin._pieceNameColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Piece Name{XRayVisionPlugin._rightSeperator.Value}   {obj.GetComponent<Piece>().m_name}</color>");
                     }
 
+                    if (obj.GetComponent<ItemDrop>())
+                    {
+                        stringBuilder.Append(
+                            $"\n<color={XRayVisionPlugin._pieceNameColor.Value}>{XRayVisionPlugin._leftSeperator.Value}ItemData Shared Name{XRayVisionPlugin._rightSeperator.Value}   {obj.GetComponent<ItemDrop>().m_itemData.m_shared.m_name}</color>");
+                    }
+
                     stringBuilder
                         .Append(
                             $"\n<color={XRayVisionPlugin._createdColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Created{XRayVisionPlugin._rightSeperator.Value}  ")
@@ -63,7 +69,7 @@ namespace XRayVision.Utilities
                             $"\n<color={XRayVisionPlugin._creatorSteamInfoColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Creator Steam Info{XRayVisionPlugin._rightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}</color>");
 
                     stringBuilder.Append(
-                            $"\n<color={XRayVisionPlugin._ownerColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Owner{XRayVisionPlugin._rightSeperator.Value}  {GetOwnerText(view)}</color>");
+                        $"\n<color={XRayVisionPlugin._ownerColor.Value}>{XRayVisionPlugin._leftSeperator.Value}Owner{XRayVisionPlugin._rightSeperator.Value}  {GetOwnerText(view)}</color>");
 
                     return __result += "\n\n" + stringBuilder;
                 case true when !HoverTextDisplay:
@@ -78,10 +84,13 @@ namespace XRayVision.Utilities
             }
         }
 
-        private static string GetOwnerText(ZNetView view) {
-            ZNet.PlayerInfo? owner = ZNet.instance.m_players.Where(i => i.m_characterID.userID == view.m_zdo.m_owner).Cast<ZNet.PlayerInfo?>().FirstOrDefault();
+        private static string GetOwnerText(ZNetView view)
+        {
+            ZNet.PlayerInfo? owner = ZNet.instance.m_players.Where(i => i.m_characterID.userID == view.m_zdo.m_owner)
+                .Cast<ZNet.PlayerInfo?>().FirstOrDefault();
 
-            if (owner == null) {
+            if (owner == null)
+            {
                 return "-";
             }
 

@@ -54,14 +54,14 @@
     * Right click the Valheim game in your steam library
     * "Go to Manage" -> "Browse local files"
     * Steam should open your game folder
-2. Extract the contents of the archive into the game folder.
+2. Extract the contents of the archive into the BepInEx\plugins folder.
 3. Locate azumatt.XRayVision.cfg under BepInEx\config and configure the mod to your needs
 
 #### Server
 
-`﻿Must be installed on both the client and the server for syncing to work properly.`
+`Must be installed on both the client and the server for syncing to work properly.`
 1. Locate your main folder manually and :
-   a. Extract the contents of the archive into the main folder that contains BepInEx
+   a. Extract the contents of the archive into the BepInEx\plugins folder.
    b. Launch your game at least once to generate the config file needed if you haven't already done so.
    c. Locate azumatt.XRayVision.cfg under BepInEx\config on your machine and configure the mod to your needs
 2. Reboot your server. All clients will now sync to the server's config file even if theirs differs. Config Manager mod changes will only change the client config, not what the server is enforcing.
@@ -84,10 +84,12 @@ For Questions or Comments, find me﻿ in the Odin Plus Team Discord:
 
 ***
 > # Update Information (Latest listed first)
+> ### v1.4.0
+> - Show token name for ItemDrops. Aka: ItemData -> Shared -> m_name
 > ### v1.3.0
 > - Take in PR on GitHub from Margmas, show ZNetView owner
 > ### v1.2.0
-> - Change a lot of code to provide a more compatible hover. 
+> - Change a lot of code to provide a more compatible hover.
 > - Toggle option for hover text changed. Now, when it's off, the text is completely removed. Just hover something and press your hotkey once more.
 > ### v1.1.0
 > - Add Hotkey to toggle hover text. Added at the request of Khordus in OdinPlus discord. Default is not set. Set this yourself.

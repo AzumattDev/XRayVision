@@ -14,19 +14,31 @@ namespace XRayVision.Utilities.RPCShit
             ZNetPeer peer = ZNet.instance.GetPeer(sender);
             if (peer != null)
             {
-                string str = peer.m_rpc.GetSocket().GetHostName();
+                string peerSteamID = peer.m_rpc.GetSocket().GetHostName();
                 if (!ZNet.instance.IsDedicated() && ZNet.instance.IsServer())
                 {
-                    XRayVisionPlugin.isAdmin = true;
+                    XRayVisionPlugin.IsAdmin = true;
                     XRayVisionPlugin.XRayLogger.LogDebug(
-                        $"Local Play Detected setting Admin:{XRayVisionPlugin.isAdmin}");
+                        $"Local Play Detected setting Admin:{XRayVisionPlugin.IsAdmin}");
                 }
 
-                //string str = ((ZSteamSocket)peer.m_socket).GetPeerID().m_SteamID.ToString();
-                if (ZNet.instance.m_adminList == null || !ZNet.instance.m_adminList.Contains(str))
-                    return;
-                XRayVisionPlugin.XRayLogger.LogInfo($"Admin Detected: {str}");
-                ZRoutedRpc.instance.InvokeRoutedRPC(sender, "XRayEventAdminSync", pkg);
+
+                if (ZNet.instance.m_adminList != null && ZNet.instance.m_adminList.Contains(peerSteamID))
+                {
+                    XRayVisionPlugin.XRayLogger.LogInfo($"Admin Detected: {peer.m_playerName} ({peerSteamID})");
+                    pkg.Write(peerSteamID);
+                    pkg.Write("Admin");
+                    ZRoutedRpc.instance.InvokeRoutedRPC(sender, "XRayEventAdminSync", pkg);
+                }
+
+                // Check if the user is found inside the server's moderator file
+                XRayVisionPlugin.ReadYamlConfigFile(null!, null!);
+                if (XRayVisionPlugin.ModeratorConfigs.ContainsKey(peerSteamID))
+                {
+                    pkg.Write(peerSteamID);
+                    pkg.Write("Moderator");
+                    ZRoutedRpc.instance.InvokeRoutedRPC(sender, "XRayEventAdminSync", pkg);
+                }
             }
             else
             {

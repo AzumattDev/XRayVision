@@ -29,10 +29,26 @@ namespace XRayVision.Utilities.RPCShit
         /// </summary>
         public static void RPC_XRayEventAdminSync(long sender, ZPackage pkg)
         {
-            XRayVisionPlugin.XRayLogger.LogInfo("This account is an admin.");
-            Chat.m_instance.AddString("[XRay]", "<color=\"green\">" + "Admin permissions synced" + "</color>",
-                Talker.Type.Normal);
-            XRayVisionPlugin.isAdmin = true;
+            string steamID = pkg.ReadString();
+            string status = pkg.ReadString();
+            switch (status)
+            {
+                case "Admin":
+                    XRayVisionPlugin.XRayLogger.LogInfo("This account is an admin.");
+                    Chat.m_instance.AddString("[XRay]", "<color=\"green\">" + "Admin permissions synced" + "</color>",
+                        Talker.Type.Normal);
+                    XRayVisionPlugin.IsAdmin = true;
+                    XRayVisionPlugin.ID = steamID;
+                    break;
+                case "Moderator":
+                    XRayVisionPlugin.XRayLogger.LogInfo("This account is a moderator.");
+                    Chat.m_instance.AddString("[XRay]",
+                        "<color=\"orange\">" + "Moderator permissions synced" + "</color>",
+                        Talker.Type.Normal);
+                    XRayVisionPlugin.IsModerator = true;
+                    XRayVisionPlugin.ID = steamID;
+                    break;
+            }
         }
 
         [HarmonyPatch(typeof(Player), nameof(Player.OnSpawned))]
@@ -42,15 +58,15 @@ namespace XRayVision.Utilities.RPCShit
             {
                 if (!ZNet.instance.IsDedicated() && ZNet.instance.IsServer())
                 {
-                    XRayVisionPlugin.isAdmin = true;
+                    XRayVisionPlugin.IsAdmin = true;
 
                     XRayVisionPlugin.XRayLogger.LogInfo(
-                        $"Local Play Detected setting Admin: {XRayVisionPlugin.isAdmin}");
+                        $"Local Play Detected setting Admin: {XRayVisionPlugin.IsAdmin}");
                 }
 
                 if (ZRoutedRpc.instance == null || !ZNetScene.instance)
                     return;
-                if (!XRayVisionPlugin.isAdmin)
+                if (!XRayVisionPlugin.IsAdmin && !XRayVisionPlugin.IsModerator)
                 {
                     ZRoutedRpc.instance.InvokeRoutedRPC(ZRoutedRpc.instance.GetServerPeerID(), "XRayRequestAdminSync",
                         new ZPackage());
@@ -76,11 +92,15 @@ namespace XRayVision.Utilities.RPCShit
         [HarmonyPatch(typeof(ZNet), nameof(ZNet.RPC_Error))]
         private static void Prefix()
         {
-            if (XRayVisionPlugin.isAdmin)
+            if (XRayVisionPlugin.IsAdmin)
             {
-                XRayVisionPlugin.isAdmin = false;
-                XRayVisionPlugin.XRayLogger.LogDebug($"Admin Status changed to: {XRayVisionPlugin.isAdmin}");
+                XRayVisionPlugin.IsAdmin = false;
+                XRayVisionPlugin.XRayLogger.LogDebug($"Admin Status changed to: {XRayVisionPlugin.IsAdmin}");
             }
+
+            if (!XRayVisionPlugin.IsModerator) return;
+            XRayVisionPlugin.IsModerator = false;
+            XRayVisionPlugin.XRayLogger.LogDebug($"Moderator Status changed to: {XRayVisionPlugin.IsModerator}");
         }
     }
 

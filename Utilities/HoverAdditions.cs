@@ -16,9 +16,89 @@ namespace XRayVision.Utilities
                     new(); // Mimic the way they add text in PrivateArea script. I'm the ward Guy after all :)
             GameObject obj = gobj.transform.root.gameObject; // Always get the top-most parent 
             ZNetView view = obj.GetComponent<ZNetView>();
-            switch (XRayVisionPlugin.isAdmin)
+            if (!XRayVisionPlugin.IsModerator && !XRayVisionPlugin.IsAdmin) return __result;
+            switch (HoverTextDisplay)
             {
-                /* Colored text examples https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/StyledText.html */
+                case true:
+                    stringBuilder.Append(
+                        Localization.instance.Localize(
+                            $"[<color=yellow><b>{XRayVisionPlugin.DisableVisuals.Value}</b></color>] $piece_guardstone_deactivate XRayVision"));
+                    if (XRayVisionPlugin.DisableVisuals.Value.IsDown())
+                    {
+                        HoverTextDisplay = false;
+                    }
+
+                    if (!view || !view.IsValid()) return __result += "\n\n" + stringBuilder;
+                    stringBuilder.Append(
+                        $"\n<color={XRayVisionPlugin.PrefabNameColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Prefab Name{XRayVisionPlugin.RightSeperator.Value}  {(view?.GetPrefabName())}</color>");
+                    if (obj.GetComponent<Piece>())
+                    {
+                        stringBuilder.Append(
+                            $"\n<color={XRayVisionPlugin.PieceNameColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Piece Name{XRayVisionPlugin.RightSeperator.Value}   {obj.GetComponent<Piece>().m_name}</color>");
+                    }
+
+                    if (obj.GetComponent<ItemDrop>())
+                    {
+                        stringBuilder.Append(
+                            $"\n<color={XRayVisionPlugin.PieceNameColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}ItemData Shared Name{XRayVisionPlugin.RightSeperator.Value}   {obj.GetComponent<ItemDrop>().m_itemData.m_shared.m_name}</color>");
+                    }
+
+                    stringBuilder
+                        .Append(
+                            $"\n<color={XRayVisionPlugin.CreatedColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Created{XRayVisionPlugin.RightSeperator.Value}  ")
+                        .Append(DateTimeOffset.Now
+                            .AddTicks(view.m_zdo.m_timeCreated - ZNet.instance.GetTime().Ticks)
+                            .ToString("g"))
+                        .Append("</color>");
+
+
+                    if (view.m_zdo.m_longs != null)
+                    {
+                        stringBuilder.Append(
+                            $"\n<color={XRayVisionPlugin.CreatorIDColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Creator ID{XRayVisionPlugin.RightSeperator.Value}  {view.GetZDO().GetLong("creator".GetStableHashCode())}</color>"); // Mimic piece component's grabbing of creator
+                    }
+
+
+                    if (view.m_zdo.GetString("creatorName").Length > 1)
+                        stringBuilder.Append(
+                            $"\n<color={XRayVisionPlugin.CreatorNameColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Creator Name{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("creatorName")}</color>");
+
+                    if (XRayVisionPlugin.ModeratorConfigs.ContainsKey(XRayVisionPlugin.ID))
+                    {
+                        bool? showSteamInformation =
+                            XRayVisionPlugin.ModeratorConfigs[XRayVisionPlugin.ID].ShowSteamInformation;
+                        if (showSteamInformation!.Value)
+                        {
+                            if (view.m_zdo.GetString("steamName").Length > 1)
+                                stringBuilder.Append(
+                                    $"\n<color={XRayVisionPlugin.CreatorSteamInfoColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Creator Steam Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}</color>");
+                        }
+                    }
+                    else if (XRayVisionPlugin.IsAdmin)
+                    {
+                        if (view.m_zdo.GetString("steamName").Length > 1)
+                            stringBuilder.Append(
+                                $"\n<color={XRayVisionPlugin.CreatorSteamInfoColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Creator Steam Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}</color>");
+                    }
+
+                    stringBuilder.Append(
+                        $"\n<color={XRayVisionPlugin.OwnerColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Owner{XRayVisionPlugin.RightSeperator.Value}  {GetOwnerText(view)}</color>");
+
+                    return __result += "\n\n" + stringBuilder;
+
+                case false:
+                    if (XRayVisionPlugin.DisableVisuals != null && XRayVisionPlugin.DisableVisuals.Value.IsDown())
+                    {
+                        HoverTextDisplay = true;
+                    }
+
+                    return __result += "\n\n" + stringBuilder;
+            }
+
+
+            /*switch (XRayVisionPlugin.isAdmin)
+            {
+                /* Colored text examples https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/StyledText.html #1#
                 case true when HoverTextDisplay:
                     stringBuilder.Append(
                         Localization.instance.Localize(
@@ -81,7 +161,7 @@ namespace XRayVision.Utilities
                     return __result += "\n\n" + stringBuilder;
                 default:
                     return __result;
-            }
+            }*/
         }
 
         private static string GetOwnerText(ZNetView view)
@@ -100,12 +180,12 @@ namespace XRayVision.Utilities
 
         public static string AddPlayerHoverText(GameObject gobj, ref string __result)
         {
-            switch (XRayVisionPlugin.isAdmin)
+            switch (XRayVisionPlugin.IsAdmin)
             {
                 /* Colored text examples https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/StyledText.html */
                 case true when HoverTextDisplay:
                 {
-                    if (XRayVisionPlugin._disableVisuals.Value.IsDown())
+                    if (XRayVisionPlugin.DisableVisuals.Value.IsDown())
                     {
                         HoverTextDisplay = false;
                     }
@@ -118,12 +198,12 @@ namespace XRayVision.Utilities
                         if (obj.GetComponent<Player>()
                             .IsCrouching()) // If they are crouching, I still want to see the name.
                             stringBuilder.Append(
-                                $"<color=#00afd4>{XRayVisionPlugin._leftSeperator.Value}Name{XRayVisionPlugin._rightSeperator.Value}  {(view ? obj.GetComponent<Player>().GetPlayerName() : obj.name)}</color>");
+                                $"<color=#00afd4>{XRayVisionPlugin.LeftSeperator.Value}Name{XRayVisionPlugin.RightSeperator.Value}  {(view ? obj.GetComponent<Player>().GetPlayerName() : obj.name)}</color>");
                         stringBuilder.Append(
-                            $"\n<color=#00afd4>{XRayVisionPlugin._leftSeperator.Value}Player ID{XRayVisionPlugin._rightSeperator.Value}  {obj.GetComponent<Player>().GetPlayerID()}</color>");
+                            $"\n<color=#00afd4>{XRayVisionPlugin.LeftSeperator.Value}Player ID{XRayVisionPlugin.RightSeperator.Value}  {obj.GetComponent<Player>().GetPlayerID()}</color>");
                         stringBuilder
                             .Append(
-                                $"\n<color=#95DBE5FF>{XRayVisionPlugin._leftSeperator.Value}Last Spawned{XRayVisionPlugin._rightSeperator.Value}  ")
+                                $"\n<color=#95DBE5FF>{XRayVisionPlugin.LeftSeperator.Value}Last Spawned{XRayVisionPlugin.RightSeperator.Value}  ")
                             .Append(
                                 DateTimeOffset.Now
                                     .AddTicks(view.m_zdo.m_timeCreated - ZNet.instance.GetTime().Ticks)
@@ -131,7 +211,7 @@ namespace XRayVision.Utilities
                             .Append("</color>");
                         if (view?.m_zdo.GetString("steamName").Length > 1)
                             stringBuilder.Append(
-                                $"\n<color=#95DBE5FF>{XRayVisionPlugin._leftSeperator.Value}Steam Info{XRayVisionPlugin._rightSeperator.Value}  {view?.m_zdo.GetString("steamName")} × {view?.m_zdo.GetString("steamID")}</color>");
+                                $"\n<color=#95DBE5FF>{XRayVisionPlugin.LeftSeperator.Value}Steam Info{XRayVisionPlugin.RightSeperator.Value}  {view?.m_zdo.GetString("steamName")} × {view?.m_zdo.GetString("steamID")}</color>");
                     }
                     catch
                     {
@@ -142,7 +222,7 @@ namespace XRayVision.Utilities
                 }
                 case true when !HoverTextDisplay:
                 {
-                    if (XRayVisionPlugin._disableVisuals.Value.IsDown())
+                    if (XRayVisionPlugin.DisableVisuals.Value.IsDown())
                     {
                         HoverTextDisplay = true;
                     }

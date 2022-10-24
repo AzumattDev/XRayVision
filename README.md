@@ -84,12 +84,19 @@ For Questions or Comments, find me﻿ in the Odin Plus Team Discord:
 
 ***
 > # Update Information (Latest listed first)
+> ### v1.6.0
+> - Add moderator list.
+>   - XRayVision_ModeratorList.yml will now be generated on the server inside the BepInEx/config folder.
+> ### v1.5.1
+> - Fix an issue I created in 1.5.0
+> ### v1.5.0
+> - Fix an issue with steam on servers
 > ### v1.4.0
 > - Show token name for ItemDrops. Aka: ItemData -> Shared -> m_name
 > ### v1.3.0
 > - Take in PR on GitHub from Margmas, show ZNetView owner
 > ### v1.2.0
-> - Change a lot of code to provide a more compatible hover.
+> - Change a lot of code to provide a more compatible hover. 
 > - Toggle option for hover text changed. Now, when it's off, the text is completely removed. Just hover something and press your hotkey once more.
 > ### v1.1.0
 > - Add Hotkey to toggle hover text. Added at the request of Khordus in OdinPlus discord. Default is not set. Set this yourself.

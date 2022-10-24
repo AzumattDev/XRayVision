@@ -44,33 +44,56 @@ namespace XRayVision
 
         protected internal static string ID = "";
 
+        public enum Toggle
+        {
+            Off,
+            On
+        }
+
         private void Awake()
         {
-            _serverConfigLocked = config("General", "Force Server Config", true, "Force Server Config");
+            /* General */
+            _serverConfigLocked = config("General", "Force Server Config", Toggle.On,
+                new ConfigDescription("If on, the configuration is locked and can be changed by server admins only.",
+                    null, new ConfigurationManagerAttributes { Category = "1 - General", Order = 1 }));
             _ = configSync?.AddLockingConfigEntry(_serverConfigLocked);
-
             DisableVisuals = config("General", "Disable XRayVision", KeyboardShortcut.Empty,
                 new ConfigDescription(
                     "Custom shortcut to enable or disable the hover text.",
-                    new AcceptableShortcuts()), false);
+                    new AcceptableShortcuts(),
+                    new ConfigurationManagerAttributes { Category = "1 - General", Order = 2 }), false);
+
+            /* Colors */
             PrefabNameColor = config("Colors", "Prefab Name Color", "#339E66FF",
-                "Color of the Prefab Name Hover text.", false);
+                new ConfigDescription("Color of the Prefab Name Hover text.", null,
+                    new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
             PieceNameColor = config("Colors", "Piece Name Color", "#339E66FF",
-                "Color of the Piece Name Hover text.", false);
+                new ConfigDescription("Color of the Piece Name Hover text.", null,
+                    new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
             CreatedColor = config("Colors", "Created Time Color", "#078282FF",
-                "Color of the Created Time Hover text.", false);
+                new ConfigDescription("Color of the Created Time Hover text.", null,
+                    new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
             CreatorIDColor = config("Colors", "Creator ID Color", "#00afd4",
-                "Color of the Creator ID Hover text.", false);
+                new ConfigDescription("Color of the Creator ID Hover text.", null,
+                    new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
             CreatorNameColor = config("Colors", "Creator Name Color", "#00afd4",
-                "Color of the Creator Name Hover text.", false);
+                new ConfigDescription("Color of the Creator Name Hover text.", null,
+                    new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
             CreatorSteamInfoColor = config("Colors", "Creator Steam Info Color", "#95DBE5FF",
-                "Color of the Steam Information Hover text.", false);
+                new ConfigDescription("Color of the Steam Information Hover text.", null,
+                    new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
             OwnerColor = config("Colors", "Owner Info Color", "#c1eaf0",
-                "Color of the Owner Hover text.", false);
+                new ConfigDescription("Color of the Owner Hover text.", null,
+                    new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
+
+            /* Attribute Wrapper */
             LeftSeperator = config("Attribute Wrapper", "Left", "「",
-                "Text to be shown to the left of the attribute labels", false);
+                new ConfigDescription("Text to be shown to the left of the attribute labels", null,
+                    new ConfigurationManagerAttributes { Category = "3 - Attribute Wrapper" }), false);
             RightSeperator = config("Attribute Wrapper", "Right", "」",
-                "Text to be shown between the attribute labels and the attribute information.", false);
+                new ConfigDescription("Text to be shown between the attribute labels and the attribute information.",
+                    null,
+                    new ConfigurationManagerAttributes { Category = "3 - Attribute Wrapper" }), false);
 
             ModeratorPermsConfigData.ValueChanged += OnValChangedUpdate; // Check for file changes.
 
@@ -179,7 +202,7 @@ namespace XRayVision
 
         #region ConfigSetup
 
-        private static ConfigEntry<bool>? _serverConfigLocked;
+        private static ConfigEntry<Toggle>? _serverConfigLocked;
         public static ConfigEntry<KeyboardShortcut>? DisableVisuals;
         internal static ConfigEntry<string>? PrefabNameColor;
         internal static ConfigEntry<string>? PieceNameColor;
@@ -216,7 +239,9 @@ namespace XRayVision
 
         private class ConfigurationManagerAttributes
         {
-            public bool? Browsable = false;
+            //public bool? Browsable = false;
+            public int? Order;
+            public string Category;
         }
 
         class AcceptableShortcuts : AcceptableValueBase

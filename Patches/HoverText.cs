@@ -26,14 +26,22 @@ namespace XRayVision.Patches
                 }
                 else
                 {
-                    __instance.m_hoverName.text =
-                        HoverAdditions.AddHoverText(hoverObject, ref result);
+                    /*__instance.m_hoverName.text =
+                        HoverAdditions.AddHoverText(hoverObject, ref result);*/
+                    XRayVisionPlugin.PropertiesText.Set(hoverObject.transform.root.gameObject.GetComponent<ZNetView>()?.GetPrefabName() is null ? "" : hoverObject.transform.root.gameObject.GetComponent<ZNetView>()?.GetPrefabName(),
+                        HoverAdditions.AddHoverText(hoverObject, ref result));
+                    XRayVisionPlugin.PropertiesText.ShowTooltip();
                 }
             }
             else if (hoverObject)
             {
                 if (hoverObject.transform.root.gameObject.GetComponent<Piece>())
                     hoverObject.AddComponent<HoverText>();
+            }
+            else
+            {
+                XRayVisionPlugin.PropertiesText.HideTooltip();
+                XRayVisionPlugin.PropertiesText.Set("NOT Hovering", "NOTHING");
             }
         }
     }
@@ -43,5 +51,37 @@ namespace XRayVision.Patches
     {
         static void Postfix(Player __instance, ref string __result) =>
             HoverAdditions.AddPlayerHoverText(__instance.gameObject, ref __result);
+    }
+
+    [HarmonyPatch(typeof(Hud), nameof(Hud.Awake))]
+    static class HudAwakePatch
+    {
+        static void Postfix(Hud __instance)
+        {
+            XRayVisionPlugin.ToolTipGameObject = Object.Instantiate(XRayVisionPlugin.BorrowedTooltip,
+                __instance.m_crosshair.transform);
+            XRayVisionPlugin.ToolTipGameObject.name = "XRayVisionProperties";
+            XRayVisionPlugin.PropertiesText = XRayVisionPlugin.ToolTipGameObject.GetComponent<XRayProps>();
+            XRayVisionPlugin.PropertiesText.textcomp.fontSize = XRayVisionPlugin.ToolTipTextSize.Value;
+            XRayVisionPlugin.PropertiesText.titlecomp.fontSize = XRayVisionPlugin.ToolTipTitleSize.Value;
+            
+            RectTransform transform = XRayVisionPlugin.ToolTipGameObject.GetComponent<RectTransform>();
+            transform.anchorMin = Vector2.zero;
+            transform.anchorMax = Vector2.zero;
+            transform.pivot = Vector2.one;
+            transform.anchoredPosition = new Vector2(-75f, 0f);
+        }
+    }
+
+    [HarmonyPatch(typeof(Hud), nameof(Hud.OnDestroy))]
+    static class Hud_OnDestroy_Patch
+    {
+        static void Prefix(ref Hud __instance)
+        {
+            if (XRayVisionPlugin.ToolTipGameObject)
+            {
+                Object.DestroyImmediate(XRayVisionPlugin.ToolTipGameObject);
+            }
+        }
     }
 }

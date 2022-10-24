@@ -84,7 +84,7 @@ namespace XRayVision.Utilities
                     stringBuilder.Append(
                         $"\n<color={XRayVisionPlugin.OwnerColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Owner{XRayVisionPlugin.RightSeperator.Value}  {GetOwnerText(view)}</color>");
 
-                    return __result += "\n\n" + stringBuilder;
+                    return __result = stringBuilder.ToString();
 
                 case false:
                     if (XRayVisionPlugin.DisableVisuals != null && XRayVisionPlugin.DisableVisuals.Value.IsDown())
@@ -92,7 +92,7 @@ namespace XRayVision.Utilities
                         HoverTextDisplay = true;
                     }
 
-                    return __result += "\n\n" + stringBuilder;
+                    return stringBuilder.ToString();
             }
 
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using BepInEx;
 using BepInEx.Bootstrap;
@@ -43,6 +44,9 @@ namespace XRayVision
             new(configSync, "XRayModeratorPerms", "");
 
         protected internal static string ID = "";
+        public static GameObject BorrowedTooltip = null!;
+        public static GameObject ToolTipGameObject = null!;
+        public static XRayProps PropertiesText = null!;
 
         public enum Toggle
         {
@@ -94,9 +98,56 @@ namespace XRayVision
                 new ConfigDescription("Text to be shown between the attribute labels and the attribute information.",
                     null,
                     new ConfigurationManagerAttributes { Category = "3 - Attribute Wrapper" }), false);
+            ToolTipBkgColor = config("Attribute Wrapper", "Tooltip Background Color", new Color(0.0f, 0.0f, 0.0f, 0.945f),
+                new ConfigDescription("Color of the background of the tooltip.",
+                    null,
+                    new ConfigurationManagerAttributes { Category = "3 - Attribute Wrapper" }), false);
+            _toolTipPosition = config("Attribute Wrapper", "Tooltip Position", new Vector2(-500f, 50f),
+                new ConfigDescription("Text to be shown between the attribute labels and the attribute information.",
+                    null,
+                    new ConfigurationManagerAttributes { Category = "3 - Attribute Wrapper" }), false);
+            ToolTipTextSize = config("Attribute Wrapper", "Tooltip Text Size", 16,
+                new ConfigDescription("Font size for the tooltip text",
+                    null,
+                    new ConfigurationManagerAttributes { Category = "3 - Attribute Wrapper" }), false);
+            ToolTipTitleSize = config("Attribute Wrapper", "Tooltip Title Size", 18,
+                new ConfigDescription("Font size for the tooltip title text",
+                    null,
+                    new ConfigurationManagerAttributes { Category = "3 - Attribute Wrapper" }), false);
+
+            ToolTipBkgColor.SettingChanged += (_, _) =>
+            {
+                if (ToolTipGameObject != null)
+                {
+                    PropertiesText.backgroundcomp.color = ToolTipBkgColor.Value;
+                }
+            };
+            _toolTipPosition.SettingChanged += (_, _) =>
+            {
+                if (ToolTipGameObject != null && ToolTipGameObject.TryGetComponent(out RectTransform transform))
+                {
+                    transform.anchoredPosition = _toolTipPosition.Value;
+                }
+            };
+            ToolTipTextSize.SettingChanged += (_, _) =>
+            {
+                if (ToolTipGameObject != null)
+                {
+                    PropertiesText.textcomp.fontSize = ToolTipTextSize.Value;
+                }
+            };
+            ToolTipTitleSize.SettingChanged += (_, _) =>
+            {
+                if (ToolTipGameObject != null)
+                {
+                    PropertiesText.titlecomp.fontSize = ToolTipTitleSize.Value;
+                }
+            };
 
             ModeratorPermsConfigData.ValueChanged += OnValChangedUpdate; // Check for file changes.
-
+            LoadTooltipAsset("xraytooltip");
+            ToolTipGameObject = new GameObject("XRayVisionPropertiesText");
+            ToolTipGameObject.SetActive(false);
             _harmony = new Harmony(ModGuid);
             _harmony.PatchAll();
 
@@ -199,6 +250,24 @@ namespace XRayVision
             }
         }
 
+        private void LoadTooltipAsset(string bundleName)
+        {
+            AssetBundle? assetBundle = GetAssetBundleFromResources(bundleName);
+            BorrowedTooltip = assetBundle.LoadAsset<GameObject>("TESTTT");
+            BorrowedTooltip.AddComponent<XRayProps>();
+            assetBundle?.Unload(false);
+        }
+
+        private static AssetBundle GetAssetBundleFromResources(string filename)
+        {
+            Assembly execAssembly = Assembly.GetExecutingAssembly();
+            string resourceName = execAssembly.GetManifestResourceNames()
+                .Single(str => str.EndsWith(filename));
+
+            using Stream? stream = execAssembly.GetManifestResourceStream(resourceName);
+            return AssetBundle.LoadFromStream(stream);
+        }
+
 
         #region ConfigSetup
 
@@ -213,6 +282,11 @@ namespace XRayVision
         internal static ConfigEntry<string>? OwnerColor;
         internal static ConfigEntry<string>? LeftSeperator;
         internal static ConfigEntry<string>? RightSeperator;
+        internal static ConfigEntry<Vector2> _toolTipPosition = null!;
+        internal static ConfigEntry<int> ToolTipTextSize = null!;
+        internal static ConfigEntry<int> ToolTipTitleSize = null!;
+        internal static ConfigEntry<Color> ToolTipBkgColor = null!;
+
 
         private ConfigEntry<T> config<T>(string group, string name, T value, ConfigDescription description,
             bool synchronizedSetting = true)

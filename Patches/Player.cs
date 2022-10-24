@@ -9,31 +9,31 @@ namespace XRayVision.Patches
     {
         static void Postfix(Player __instance)
         {
-            if (!ZNet.instance) return;
+            if (!ZNet.instance || !__instance.m_nview || __instance.m_nview.GetZDO() == null) return;
+
+            ZNetPeer netPeer;
+            string steamName = string.Empty;
+
             if (ZNet.instance.IsServer() && ZNet.instance.IsDedicated())
             {
-                ZNetPeer? netPeer = ZNet.instance.GetPeer(__instance.m_nview.m_zdo.m_uid.m_userID);
+                netPeer = ZNet.instance.GetPeer(__instance.m_nview.m_zdo.m_uid.m_userID);
 
-                CSteamID SteamID = new(ulong.Parse(netPeer.m_rpc.GetSocket().GetHostName()));
-                __instance.m_nview?.GetZDO()
-                    .Set("steamName", SteamFriends.GetFriendPersonaName(SteamID));
-                __instance.m_nview?.GetZDO()
-                    .Set("steamID", netPeer.m_rpc.GetSocket().GetHostName());
+                if (PlatformUtils.GetPlatform(netPeer) == PrivilegeManager.Platform.Steam)
+                {
+                    CSteamID steamID = new(ulong.Parse(netPeer.m_rpc.GetSocket().GetHostName()));
+                    steamName = SteamFriends.GetFriendPersonaName(steamID);
+                }
             }
             else
             {
-                string? steamID = readLocalSteamID();
-                if (__instance.m_nview.GetZDO() == null)
-                    return;
-                __instance.m_nview?.GetZDO()
-                    .Set("steamName", SteamFriends.GetPersonaName());
-                __instance.m_nview?.GetZDO()
-                    .Set("steamID", steamID);
-            }
-        }
+                netPeer = ZNet.instance.GetServerPeer();
 
-        internal static string? readLocalSteamID() =>
-            Type.GetType("Steamworks.SteamUser, assembly_steamworks")?.GetMethod("GetSteamID")!
-                .Invoke(null, Array.Empty<object>()).ToString();
+                if (PlatformUtils.GetPlatform(netPeer) == PrivilegeManager.Platform.Steam)
+                    steamName = SteamFriends.GetPersonaName();
+            }
+
+            __instance.m_nview.GetZDO().Set("steamName", steamName);
+            __instance.m_nview.GetZDO().Set("steamID", netPeer.m_socket.GetHostName());
+        }
     }
 }

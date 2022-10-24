@@ -104,6 +104,7 @@
         <Compile Include="Utilities\Definitions.cs" />
         <Compile Include="Utilities\FileHandler.cs" />
         <Compile Include="Utilities\HoverAdditions.cs" />
+        <Compile Include="Utilities\PlatformUtils.cs" />
         <Compile Include="Utilities\RPCShit\Client.cs" />
         <Compile Include="Utilities\RPCShit\Server.cs" />
         <Compile Include="Utilities\VersionHandshake.cs" />

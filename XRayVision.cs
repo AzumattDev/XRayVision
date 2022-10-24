@@ -74,7 +74,7 @@ namespace XRayVision
                     new AcceptableShortcuts(),
                     new ConfigurationManagerAttributes { Category = "1 - General", Order = 2 }), false);
             CopyHotkey = config("General", "Copy Information Shortcut",
-                new KeyboardShortcut(KeyCode.C, KeyCode.LeftControl),
+                new KeyboardShortcut(KeyCode.H),
                 new ConfigDescription(
                     "Custom shortcut to copy the current tooltip information to the clipboard.",
                     null,

@@ -11,6 +11,7 @@ namespace XRayVision.Utilities
 
         public static string AddHoverText(GameObject gobj, ref string __result)
         {
+            /* TODO: Clean up this mess */
             StringBuilder
                 stringBuilder =
                     new(); // Mimic the way they add text in PrivateArea script. I'm the ward Guy after all :)

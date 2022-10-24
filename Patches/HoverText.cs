@@ -28,10 +28,16 @@ namespace XRayVision.Patches
                 {
                     /*__instance.m_hoverName.text =
                         HoverAdditions.AddHoverText(hoverObject, ref result);*/
-                    XRayVisionPlugin.PropertiesText.Set((hoverObject.transform.root.gameObject.GetComponent<ZNetView>()?.GetPrefabName() is null ? "" : hoverObject.transform.root.gameObject.GetComponent<ZNetView>()?.GetPrefabName())!,
+                    XRayVisionPlugin.PropertiesText.Set(
+                        (hoverObject.transform.root.gameObject.GetComponent<ZNetView>()?.GetPrefabName() is null
+                            ? ""
+                            : hoverObject.transform.root.gameObject.GetComponent<ZNetView>()?.GetPrefabName())!,
                         HoverAdditions.AddHoverText(hoverObject, ref result));
 
-                    if (XRayVisionPlugin.CopyHotkey.Value.IsDown())
+                    if (XRayVisionPlugin.CopyHotkey.Value.IsDown() ||
+                        XRayVisionPlugin.CopyHotkey.Value.IsPressed() &&
+                        XRayVisionPlugin.DisableVisuals.Value.IsPressed() ||
+                        XRayVisionPlugin.CopyHotkey.Value.IsDown() && XRayVisionPlugin.DisableVisuals.Value.IsPressed())
                     {
                         Player.m_localPlayer.Message(MessageHud.MessageType.Center, "Copied to clipboard", 0, null);
                         GUIUtility.systemCopyBuffer = XRayVisionPlugin.CleanCopy;
@@ -69,7 +75,7 @@ namespace XRayVision.Patches
             XRayVisionPlugin.PropertiesText = XRayVisionPlugin.ToolTipGameObject.GetComponent<XRayProps>();
             XRayVisionPlugin.PropertiesText.textcomp.fontSize = XRayVisionPlugin.ToolTipTextSize.Value;
             XRayVisionPlugin.PropertiesText.titlecomp.fontSize = XRayVisionPlugin.ToolTipTitleSize.Value;
-            
+
             RectTransform transform = XRayVisionPlugin.ToolTipGameObject.GetComponent<RectTransform>();
             transform.anchorMin = Vector2.zero;
             transform.anchorMax = Vector2.zero;

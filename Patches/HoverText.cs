@@ -28,9 +28,14 @@ namespace XRayVision.Patches
                 {
                     /*__instance.m_hoverName.text =
                         HoverAdditions.AddHoverText(hoverObject, ref result);*/
-                    XRayVisionPlugin.PropertiesText.Set(hoverObject.transform.root.gameObject.GetComponent<ZNetView>()?.GetPrefabName() is null ? "" : hoverObject.transform.root.gameObject.GetComponent<ZNetView>()?.GetPrefabName(),
+                    XRayVisionPlugin.PropertiesText.Set((hoverObject.transform.root.gameObject.GetComponent<ZNetView>()?.GetPrefabName() is null ? "" : hoverObject.transform.root.gameObject.GetComponent<ZNetView>()?.GetPrefabName())!,
                         HoverAdditions.AddHoverText(hoverObject, ref result));
-                    XRayVisionPlugin.PropertiesText.ShowTooltip();
+
+                    if (XRayVisionPlugin.CopyHotkey.Value.IsDown())
+                    {
+                        Player.m_localPlayer.Message(MessageHud.MessageType.Center, "Copied to clipboard", 0, null);
+                        GUIUtility.systemCopyBuffer = XRayVisionPlugin.CleanCopy;
+                    }
                 }
             }
             else if (hoverObject)

@@ -37,7 +37,7 @@ namespace XRayVision
         private Harmony? _harmony;
         internal static readonly ManualLogSource XRayLogger = BepInEx.Logging.Logger.CreateLogSource(ModName);
 
-        private static readonly ConfigSync? configSync = new(ModName)
+        private static readonly ConfigSync configSync = new(ModName)
             { DisplayName = ModName, CurrentVersion = ModVersion, MinimumRequiredVersion = ModVersion };
 
         internal static CustomSyncedValue<string> ModeratorPermsConfigData =
@@ -47,6 +47,7 @@ namespace XRayVision
         public static GameObject BorrowedTooltip = null!;
         public static GameObject ToolTipGameObject = null!;
         public static XRayProps PropertiesText = null!;
+        public static string CleanCopy = "";
 
         public enum Toggle
         {
@@ -59,13 +60,25 @@ namespace XRayVision
             /* General */
             _serverConfigLocked = config("General", "Force Server Config", Toggle.On,
                 new ConfigDescription("If on, the configuration is locked and can be changed by server admins only.",
-                    null, new ConfigurationManagerAttributes { Category = "1 - General", Order = 1 }));
+                    null, new ConfigurationManagerAttributes { Category = "1 - General", Order = 4 }));
             _ = configSync?.AddLockingConfigEntry(_serverConfigLocked);
-            DisableVisuals = config("General", "Disable XRayVision", KeyboardShortcut.Empty,
+            ToggleTooltip = config("General", "Toggle Tooltip",
+                Toggle.On,
                 new ConfigDescription(
-                    "Custom shortcut to enable or disable the hover text.",
+                    "If on, the tooltip will be visible when you hover over an item and the tooltip is toggled to show content. If off, the tooltip will be hidden until you hold down your Disable XRayVision Keyboard shortcut.",
+                    null,
+                    new ConfigurationManagerAttributes { Category = "1 - General", Order = 3 }), false);
+            DisableVisuals = config("General", "Disable XRayVision", new KeyboardShortcut(KeyCode.G),
+                new ConfigDescription(
+                    "Custom shortcut to enable or disable the tooltip. Depending on the configuration, the tooltip will be hidden or visible when you hold down or press this key.",
                     new AcceptableShortcuts(),
                     new ConfigurationManagerAttributes { Category = "1 - General", Order = 2 }), false);
+            CopyHotkey = config("General", "Copy Information Shortcut",
+                new KeyboardShortcut(KeyCode.C, KeyCode.LeftControl),
+                new ConfigDescription(
+                    "Custom shortcut to copy the current tooltip information to the clipboard.",
+                    null,
+                    new ConfigurationManagerAttributes { Category = "1 - General", Order = 1 }), false);
 
             /* Colors */
             PrefabNameColor = config("Colors", "Prefab Name Color", "#339E66FF",
@@ -98,21 +111,22 @@ namespace XRayVision
                 new ConfigDescription("Text to be shown between the attribute labels and the attribute information.",
                     null,
                     new ConfigurationManagerAttributes { Category = "3 - Attribute Wrapper" }), false);
-            ToolTipBkgColor = config("Attribute Wrapper", "Tooltip Background Color", new Color(0.0f, 0.0f, 0.0f, 0.945f),
+            ToolTipBkgColor = config("Attribute Wrapper", "Tooltip Background Color",
+                new Color(0.0f, 0.0f, 0.0f, 0.945f),
                 new ConfigDescription("Color of the background of the tooltip.",
                     null,
                     new ConfigurationManagerAttributes { Category = "3 - Attribute Wrapper" }), false);
-            _toolTipPosition = config("Attribute Wrapper", "Tooltip Position", new Vector2(-500f, 50f),
+            ToolTipPosition = config("Attribute Wrapper", "Tooltip Position", new Vector2(-500f, 50f),
                 new ConfigDescription("Text to be shown between the attribute labels and the attribute information.",
                     null,
                     new ConfigurationManagerAttributes { Category = "3 - Attribute Wrapper" }), false);
             ToolTipTextSize = config("Attribute Wrapper", "Tooltip Text Size", 16,
                 new ConfigDescription("Font size for the tooltip text",
-                    null,
+                    new AcceptableValueRange<int>(1, int.MaxValue),
                     new ConfigurationManagerAttributes { Category = "3 - Attribute Wrapper" }), false);
             ToolTipTitleSize = config("Attribute Wrapper", "Tooltip Title Size", 18,
                 new ConfigDescription("Font size for the tooltip title text",
-                    null,
+                    new AcceptableValueRange<int>(1, int.MaxValue),
                     new ConfigurationManagerAttributes { Category = "3 - Attribute Wrapper" }), false);
 
             ToolTipBkgColor.SettingChanged += (_, _) =>
@@ -122,11 +136,11 @@ namespace XRayVision
                     PropertiesText.backgroundcomp.color = ToolTipBkgColor.Value;
                 }
             };
-            _toolTipPosition.SettingChanged += (_, _) =>
+            ToolTipPosition.SettingChanged += (_, _) =>
             {
                 if (ToolTipGameObject != null && ToolTipGameObject.TryGetComponent(out RectTransform transform))
                 {
-                    transform.anchoredPosition = _toolTipPosition.Value;
+                    transform.anchoredPosition = ToolTipPosition.Value;
                 }
             };
             ToolTipTextSize.SettingChanged += (_, _) =>
@@ -271,18 +285,20 @@ namespace XRayVision
 
         #region ConfigSetup
 
-        private static ConfigEntry<Toggle>? _serverConfigLocked;
-        public static ConfigEntry<KeyboardShortcut>? DisableVisuals;
-        internal static ConfigEntry<string>? PrefabNameColor;
-        internal static ConfigEntry<string>? PieceNameColor;
-        internal static ConfigEntry<string>? CreatedColor;
-        internal static ConfigEntry<string>? CreatorIDColor;
-        internal static ConfigEntry<string>? CreatorNameColor;
-        internal static ConfigEntry<string>? CreatorSteamInfoColor;
-        internal static ConfigEntry<string>? OwnerColor;
-        internal static ConfigEntry<string>? LeftSeperator;
-        internal static ConfigEntry<string>? RightSeperator;
-        internal static ConfigEntry<Vector2> _toolTipPosition = null!;
+        private static ConfigEntry<Toggle> _serverConfigLocked = null!;
+        internal static ConfigEntry<Toggle> ToggleTooltip = null!;
+        public static ConfigEntry<KeyboardShortcut> DisableVisuals = null!;
+        public static ConfigEntry<KeyboardShortcut> CopyHotkey = null!;
+        internal static ConfigEntry<string> PrefabNameColor = null!;
+        internal static ConfigEntry<string> PieceNameColor = null!;
+        internal static ConfigEntry<string> CreatedColor = null!;
+        internal static ConfigEntry<string> CreatorIDColor = null!;
+        internal static ConfigEntry<string> CreatorNameColor = null!;
+        internal static ConfigEntry<string> CreatorSteamInfoColor = null!;
+        internal static ConfigEntry<string> OwnerColor = null!;
+        internal static ConfigEntry<string> LeftSeperator = null!;
+        internal static ConfigEntry<string> RightSeperator = null!;
+        internal static ConfigEntry<Vector2> ToolTipPosition = null!;
         internal static ConfigEntry<int> ToolTipTextSize = null!;
         internal static ConfigEntry<int> ToolTipTitleSize = null!;
         internal static ConfigEntry<Color> ToolTipBkgColor = null!;
@@ -315,7 +331,7 @@ namespace XRayVision
         {
             //public bool? Browsable = false;
             public int? Order;
-            public string Category;
+            public string? Category;
         }
 
         class AcceptableShortcuts : AcceptableValueBase

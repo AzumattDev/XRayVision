@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -6,15 +7,19 @@ namespace XRayVision.Utilities;
 
 public class XRayProps : MonoBehaviour
 {
-    public string m_text = "";
-    public string m_topic = "";
-    public Text textcomp;
-    public Text titlecomp;
-    public Image backgroundcomp;
+    public string mText = "";
+    public string mTopic = "";
+    public Text textcomp = null!;
+    public Text titlecomp = null!;
+    public Image backgroundcomp = null!;
 
     public void Awake()
     {
         UpdateTextElements();
+    }
+
+    public void Start()
+    {
         ApplyDefaults();
     }
 
@@ -24,7 +29,7 @@ public class XRayProps : MonoBehaviour
         if (child1 != null)
         {
             textcomp = child1.GetComponent<Text>();
-            child1.GetComponent<Text>().text = Localization.instance.Localize(m_text);
+            child1.GetComponent<Text>().text = Localization.instance.Localize(mText);
         }
 
         Transform bkg = Utils.FindChild(transform, "Bkg");
@@ -37,15 +42,16 @@ public class XRayProps : MonoBehaviour
         if (child2 == null)
             return;
         titlecomp = child2.GetComponent<Text>();
-        child2.GetComponent<Text>().text = Localization.instance.Localize(m_topic);
+        child2.GetComponent<Text>().text = Localization.instance.Localize(mTopic);
     }
 
     public void ApplyDefaults()
     {
+        XRayVisionPlugin.XRayLogger.LogDebug("Applying defaults");
         if (XRayVisionPlugin.ToolTipGameObject != null &&
             XRayVisionPlugin.ToolTipGameObject.TryGetComponent(out RectTransform transform))
         {
-            transform.anchoredPosition = XRayVisionPlugin._toolTipPosition.Value;
+            transform.anchoredPosition = XRayVisionPlugin.ToolTipPosition.Value;
         }
 
 
@@ -81,10 +87,10 @@ public class XRayProps : MonoBehaviour
 
     public void Set(string topic, string text)
     {
-        if (topic == m_topic && text == m_text)
+        if (topic == mTopic && text == mText)
             return;
-        m_topic = topic;
-        m_text = text;
+        mTopic = topic;
+        mText = text;
         if (this == null)
             return;
         UpdateTextElements();

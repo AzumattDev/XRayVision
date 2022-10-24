@@ -121,17 +121,14 @@ namespace XRayVision.Utilities
                     return __result = stringBuilder.ToString();
 
                 case false:
-                    if (XRayVisionPlugin.DisableVisuals != null)
+                    switch (XRayVisionPlugin.ToggleTooltip.Value)
                     {
-                        switch (XRayVisionPlugin.ToggleTooltip.Value)
-                        {
-                            case XRayVisionPlugin.Toggle.On when
-                                XRayVisionPlugin.DisableVisuals.Value.IsDown():
-                            case XRayVisionPlugin.Toggle.Off when
-                                XRayVisionPlugin.DisableVisuals.Value.IsPressed():
-                                HoverTextDisplay = true;
-                                break;
-                        }
+                        case XRayVisionPlugin.Toggle.On when
+                            XRayVisionPlugin.DisableVisuals.Value.IsDown():
+                        case XRayVisionPlugin.Toggle.Off when
+                            XRayVisionPlugin.DisableVisuals.Value.IsPressed():
+                            HoverTextDisplay = true;
+                            break;
                     }
 
                     XRayVisionPlugin.PropertiesText.HideTooltip();

@@ -8,7 +8,7 @@ namespace XRayVision.Utilities
 {
     public class FileHandler
     {
-       internal static void ModeratorListCreate()
+        internal static void ModeratorListCreate()
         {
             //if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Null) return;
 
@@ -17,9 +17,11 @@ namespace XRayVision.Utilities
             if (!File.Exists(Paths.ConfigPath + Path.DirectorySeparatorChar + XRayVisionPlugin.ModbypassFileName))
             {
                 using StreamWriter streamWriter =
-                    File.CreateText(Paths.ConfigPath + Path.DirectorySeparatorChar + XRayVisionPlugin.ModbypassFileName);
+                    File.CreateText(Paths.ConfigPath + Path.DirectorySeparatorChar +
+                                    XRayVisionPlugin.ModbypassFileName);
                 streamWriter.Write(new StringBuilder()
-                    .AppendLine("# Configure your per Moderator permissions in this file. Currently there is only one, but we can add more as the suggestions are made.")
+                    .AppendLine(
+                        "# Configure your per Moderator permissions in this file. Currently there is only one, but we can add more as the suggestions are made.")
                     .AppendLine(
                         "# Fill out more moderators just like the example given. This uses their Steam64ID as the key.")
                     .AppendLine("")
@@ -29,6 +31,6 @@ namespace XRayVision.Utilities
                     .AppendLine(""));
                 streamWriter.Close();
             }
-        } 
+        }
     }
 }

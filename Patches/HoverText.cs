@@ -26,21 +26,21 @@ namespace XRayVision.Patches
                 }
                 else
                 {
-                    /*__instance.m_hoverName.text =
-                        HoverAdditions.AddHoverText(hoverObject, ref result);*/
-                    XRayVisionPlugin.PropertiesText.Set(
-                        (hoverObject.transform.root.gameObject.GetComponent<ZNetView>()?.GetPrefabName() is null
-                            ? ""
-                            : hoverObject.transform.root.gameObject.GetComponent<ZNetView>()?.GetPrefabName())!,
-                        HoverAdditions.AddHoverText(hoverObject, ref result));
-
-                    if (XRayVisionPlugin.CopyHotkey.Value.IsDown() ||
+                    if (XRayVisionPlugin.CopyHotkey.Value.IsDown() || XRayVisionPlugin.CopyHotkey.Value.IsPressed() ||
                         XRayVisionPlugin.CopyHotkey.Value.IsPressed() &&
                         XRayVisionPlugin.DisableVisuals.Value.IsPressed() ||
                         XRayVisionPlugin.CopyHotkey.Value.IsDown() && XRayVisionPlugin.DisableVisuals.Value.IsPressed())
                     {
-                        Player.m_localPlayer.Message(MessageHud.MessageType.Center, "Copied to clipboard", 0, null);
-                        GUIUtility.systemCopyBuffer = XRayVisionPlugin.CleanCopy;
+                        Player.m_localPlayer.Message(MessageHud.MessageType.Center, "Copied to clipboard");
+                        GUIUtility.systemCopyBuffer = HoverAdditions.AddHoverText(hoverObject, ref result, true);
+                    }
+                    else
+                    {
+                        XRayVisionPlugin.PropertiesText.Set(
+                            (hoverObject.transform.root.gameObject.GetComponent<ZNetView>()?.GetPrefabName() is null
+                                ? ""
+                                : hoverObject.transform.root.gameObject.GetComponent<ZNetView>()?.GetPrefabName())!,
+                            HoverAdditions.AddHoverText(hoverObject, ref result));
                     }
                 }
             }

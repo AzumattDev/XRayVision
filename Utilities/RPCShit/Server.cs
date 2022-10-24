@@ -19,11 +19,12 @@ namespace XRayVision.Utilities.RPCShit
                 {
                     XRayVisionPlugin.IsAdmin = true;
                     XRayVisionPlugin.XRayLogger.LogDebug(
-                        $"Local Play Detected setting Admin:{XRayVisionPlugin.IsAdmin}");
+                        $"Local Play Detected setting Admin: {XRayVisionPlugin.IsAdmin}");
                 }
 
 
-                if (ZNet.instance.m_adminList != null && ZNet.instance.m_adminList.Contains(peerSteamID))
+                if (ZNet.instance.m_adminList != null &&
+                    ZNet.instance.ListContainsId(ZNet.instance.m_adminList, peerSteamID))
                 {
                     XRayVisionPlugin.XRayLogger.LogInfo($"Admin Detected: {peer.m_playerName} ({peerSteamID})");
                     pkg.Write(peerSteamID);

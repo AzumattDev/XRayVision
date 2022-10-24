@@ -22,7 +22,7 @@ namespace XRayVision
         public const string ModVersion = "1.6.0";
         public const string ModName = "XRayVision";
         internal const string Author = "Azumatt";
-        private const string ModGuid = "azumatt.XRayVision";
+        private const string ModGuid = "Azumatt.XRayVision";
         private static string ConfigFileName = ModGuid + ".cfg";
         private static string ConfigFileFullPath = Paths.ConfigPath + Path.DirectorySeparatorChar + ConfigFileName;
 

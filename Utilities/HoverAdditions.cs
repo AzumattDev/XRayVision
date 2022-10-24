@@ -193,11 +193,11 @@ namespace XRayVision.Utilities
         {
             if (view.m_zdo.GetString("steamName").Length > 1)
                 return clean
-                    ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Creator Steam Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}"
-                    : $"\n<color={XRayVisionPlugin.CreatorSteamInfoColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Creator Steam Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}</color>";
+                    ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Creator Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}"
+                    : $"\n<color={XRayVisionPlugin.CreatorSteamInfoColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Creator Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}</color>";
             return clean
-                ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Creator Steam Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamID")}"
-                : $"\n<color={XRayVisionPlugin.CreatorSteamInfoColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Creator Steam Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamID")}</color>";
+                ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Creator Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamID")}"
+                : $"\n<color={XRayVisionPlugin.CreatorSteamInfoColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Creator Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamID")}</color>";
         }
 
         public static string AddPlayerHoverText(GameObject gobj, ref string __result)
@@ -233,10 +233,10 @@ namespace XRayVision.Utilities
                             .Append("</color>");
                         if (view.m_zdo.GetString("steamName").Length >= 1)
                             stringBuilder.Append(
-                                $"\n<color=#95DBE5FF>{XRayVisionPlugin.LeftSeperator.Value}Steam Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}</color>");
+                                $"\n<color=#95DBE5FF>{XRayVisionPlugin.LeftSeperator.Value}Player Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}</color>");
                         else if (view.m_zdo.GetString("steamID").Length >= 1)
                             stringBuilder.Append(
-                                $"\n<color=#95DBE5FF>{XRayVisionPlugin.LeftSeperator.Value}Steam Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamID")}</color>");
+                                $"\n<color=#95DBE5FF>{XRayVisionPlugin.LeftSeperator.Value}Player Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamID")}</color>");
                     }
                     catch
                     {

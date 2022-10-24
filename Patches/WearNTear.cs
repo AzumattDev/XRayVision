@@ -1,6 +1,7 @@
 ﻿using System;
 using HarmonyLib;
 using Steamworks;
+
 namespace XRayVision.Patches
 {
     [HarmonyPatch]
@@ -10,24 +11,30 @@ namespace XRayVision.Patches
         [HarmonyPrefix]
         private static void Prefix(WearNTear __instance)
         {
-            if (!__instance.m_nview.IsValid() || __instance.m_nview == null) return;
+            if (!__instance || !__instance.m_nview || !__instance.m_nview.IsValid()) return;
             if (__instance.gameObject.GetComponent<Hoverable>() == null)
             {
                 __instance.gameObject.AddComponent<HoverText>();
             }
 
-            string? steamID = readLocalSteamID();
-            if (__instance == null) return;
-            __instance.m_nview?.GetZDO().Set("creatorName", Player.m_localPlayer.GetPlayerName());
-            __instance.m_nview?.GetZDO()
-                .Set("steamName", SteamFriends.GetPersonaName());
-            __instance.m_nview?.GetZDO()
-                .Set("steamID", steamID);
+            string steamName;
+            string steamID;
+
+            if (PrivilegeManager.GetCurrentPlatform() == PrivilegeManager.Platform.Steam)
+            {
+                steamName = SteamFriends.GetPersonaName();
+                steamID = SteamUser.GetSteamID().ToString();
+            }
+            else
+            {
+                steamName = "";
+                steamID = PrivilegeManager.GetNetworkUserId();
+            }
+
+            // For backwards compatibility and WardIsLove (and various other mods of mine) I can't change the name of the variables that are saved in the ZDO
+            __instance.m_nview.GetZDO().Set("creatorName", Player.m_localPlayer.GetPlayerName());
+            __instance.m_nview.GetZDO().Set("steamID", steamID);
+            __instance.m_nview.GetZDO().Set("steamName", steamName);
         }
-
-
-        internal static string? readLocalSteamID() =>
-            Type.GetType("Steamworks.SteamUser, assembly_steamworks")?.GetMethod("GetSteamID")!
-                .Invoke(null, Array.Empty<object>()).ToString();
     }
 }

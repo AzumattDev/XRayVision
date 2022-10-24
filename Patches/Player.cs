@@ -1,39 +1,47 @@
 ﻿using System;
 using HarmonyLib;
 using Steamworks;
+using XRayVision.Utilities;
 
 namespace XRayVision.Patches
 {
     [HarmonyPatch(typeof(Player), nameof(Player.SetPlayerID))]
-    static class Player_XRAYSetPlayerID_Patch
+    static class PlayerXraySetPlayerIDPatch
     {
         static void Postfix(Player __instance)
         {
             if (!ZNet.instance) return;
+            ZNetPeer netPeer;
+            string steamName = string.Empty;
+            string steamID = string.Empty;
             if (ZNet.instance.IsServer() && ZNet.instance.IsDedicated())
             {
-                ZNetPeer? netPeer = ZNet.instance.GetPeer(__instance.m_nview.m_zdo.m_uid.m_userID);
+                netPeer = ZNet.instance.GetPeer(__instance.m_nview.m_zdo.m_uid.m_userID);
 
-                CSteamID SteamID = new(ulong.Parse(netPeer.m_rpc.GetSocket().GetHostName()));
-                __instance.m_nview?.GetZDO()
-                    .Set("steamName", SteamFriends.GetFriendPersonaName(SteamID));
-                __instance.m_nview?.GetZDO()
-                    .Set("steamID", netPeer.m_rpc.GetSocket().GetHostName());
+                if (PlatformUtils.GetPlatform(netPeer) == PrivilegeManager.Platform.Steam)
+                {
+                    CSteamID SteamID = new(ulong.Parse(netPeer.m_rpc.GetSocket().GetHostName()));
+                    steamName = SteamFriends.GetFriendPersonaName(SteamID);
+                    steamID = SteamID.ToString();
+                }
             }
             else
             {
-                string? steamID = readLocalSteamID();
-                if (__instance.m_nview.GetZDO() == null)
-                    return;
-                __instance.m_nview?.GetZDO()
-                    .Set("steamName", SteamFriends.GetPersonaName());
-                __instance.m_nview?.GetZDO()
-                    .Set("steamID", steamID);
+                if (PrivilegeManager.GetCurrentPlatform() == PrivilegeManager.Platform.Steam)
+                {
+                    steamName = SteamFriends.GetPersonaName();
+                    steamID = SteamUser.GetSteamID().ToString();
+                }
+                else
+                {
+                    steamName = "";
+                    steamID = PrivilegeManager.GetNetworkUserId();
+                }
             }
-        }
 
-        internal static string? readLocalSteamID() =>
-            Type.GetType("Steamworks.SteamUser, assembly_steamworks")?.GetMethod("GetSteamID")!
-                .Invoke(null, Array.Empty<object>()).ToString();
+            // For backwards compatibility and WardIsLove (and various other mods of mine) I can't change the name of the variables that are saved in the ZDO
+            __instance.m_nview.GetZDO().Set("steamName", steamName);
+            __instance.m_nview.GetZDO().Set("steamID", steamID);
+        }
     }
 }

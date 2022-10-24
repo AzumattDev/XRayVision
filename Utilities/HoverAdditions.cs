@@ -16,7 +16,10 @@ namespace XRayVision.Utilities
                     new(); // Mimic the way they add text in PrivateArea script. I'm the ward Guy after all :)
             Tuple<ZNetView, GameObject> tuple = GetZNetView(gobj);
             if (!XRayVisionPlugin.IsModerator && !XRayVisionPlugin.IsAdmin) return __result;
-            if(!needItCleanJack){stringBuilder.Append(GetVisualButtonText());}
+            if (!needItCleanJack)
+            {
+                stringBuilder.Append(GetVisualButtonText());
+            }
 
             if (!tuple.Item1 || !tuple.Item1.IsValid()) return __result += "\n\n" + stringBuilder;
             stringBuilder.Append(GetPrefabString(tuple.Item1, needItCleanJack));
@@ -47,7 +50,8 @@ namespace XRayVision.Utilities
                     XRayVisionPlugin.ModeratorConfigs[XRayVisionPlugin.ID].ShowSteamInformation;
                 if (showSteamInformation!.Value)
                 {
-                    if (tuple.Item1.m_zdo.GetString("steamName").Length > 1)
+                    if (tuple.Item1.m_zdo.GetString("steamName").Length > 1 ||
+                        tuple.Item1.m_zdo.GetString("steamID").Length > 1)
                     {
                         stringBuilder.Append(GetSteamInfoString(tuple.Item1, needItCleanJack));
                     }
@@ -55,7 +59,8 @@ namespace XRayVision.Utilities
             }
             else if (XRayVisionPlugin.IsAdmin)
             {
-                if (tuple.Item1.m_zdo.GetString("steamName").Length > 1)
+                if (tuple.Item1.m_zdo.GetString("steamName").Length > 1 ||
+                    tuple.Item1.m_zdo.GetString("steamID").Length > 1)
                 {
                     stringBuilder.Append(GetSteamInfoString(tuple.Item1, needItCleanJack));
                 }
@@ -76,7 +81,8 @@ namespace XRayVision.Utilities
                     if (XRayVisionPlugin.DisableVisuals.Value.IsDown() &&
                         XRayVisionPlugin.ToggleTooltip.Value == XRayVisionPlugin.Toggle.On)
                     {
-                        XRayVisionPlugin.XRayLogger.LogError("XRayVision: HoverTextDisplay is true, attempting to turn off visuals");
+                        XRayVisionPlugin.XRayLogger.LogError(
+                            "XRayVision: HoverTextDisplay is true, attempting to turn off visuals");
                         HoverTextDisplay = false;
                     }
 
@@ -93,7 +99,8 @@ namespace XRayVision.Utilities
                         (XRayVisionPlugin.ToggleTooltip.Value == XRayVisionPlugin.Toggle.Off &&
                          XRayVisionPlugin.DisableVisuals.Value.IsPressed()))
                     {
-                        XRayVisionPlugin.XRayLogger.LogError("XRayVision: HoverTextDisplay is false, attempting to turn on visuals");
+                        XRayVisionPlugin.XRayLogger.LogError(
+                            "XRayVision: HoverTextDisplay is false, attempting to turn on visuals");
                         HoverTextDisplay = true;
                     }
                     else
@@ -191,9 +198,13 @@ namespace XRayVision.Utilities
 
         private static string GetSteamInfoString(ZNetView view, bool clean = false)
         {
+            if (view.m_zdo.GetString("steamName").Length > 1)
+                return clean
+                    ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Creator Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}"
+                    : $"\n<color={XRayVisionPlugin.CreatorSteamInfoColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Creator Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}</color>";
             return clean
-                ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Creator Steam Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}"
-                : $"\n<color={XRayVisionPlugin.CreatorSteamInfoColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Creator Steam Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}</color>";
+                ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Creator Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamID")}"
+                : $"\n<color={XRayVisionPlugin.CreatorSteamInfoColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Creator Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamID")}</color>";
         }
 
         public static string AddPlayerHoverText(GameObject gobj, ref string __result)
@@ -227,9 +238,12 @@ namespace XRayVision.Utilities
                                     .AddTicks(view.m_zdo.m_timeCreated - ZNet.instance.GetTime().Ticks)
                                     .ToString("g"))
                             .Append("</color>");
-                        if (view?.m_zdo.GetString("steamName").Length > 1)
+                        if (view.m_zdo.GetString("steamName").Length >= 1)
                             stringBuilder.Append(
-                                $"\n<color=#95DBE5FF>{XRayVisionPlugin.LeftSeperator.Value}Steam Info{XRayVisionPlugin.RightSeperator.Value}  {view?.m_zdo.GetString("steamName")} × {view?.m_zdo.GetString("steamID")}</color>");
+                                $"\n<color=#95DBE5FF>{XRayVisionPlugin.LeftSeperator.Value}Player Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}</color>");
+                        else if (view.m_zdo.GetString("steamID").Length >= 1)
+                            stringBuilder.Append(
+                                $"\n<color=#95DBE5FF>{XRayVisionPlugin.LeftSeperator.Value}Player Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamID")}</color>");
                     }
                     catch
                     {

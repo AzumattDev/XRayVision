@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using UnityEngine;
 
@@ -19,6 +21,7 @@ namespace XRayVision.Utilities
             if (!needItCleanJack)
             {
                 stringBuilder.Append(GetVisualButtonText());
+                stringBuilder.Append(GetCopyButtonText());
             }
 
             if (!tuple.Item1 || !tuple.Item1.IsValid()) return __result += "\n\n" + stringBuilder;
@@ -133,18 +136,26 @@ namespace XRayVision.Utilities
                     $"Release [<color=yellow><b>{XRayVisionPlugin.DisableVisuals.Value}</b></color>] to hide tooltip");
         }
 
+        private static string GetCopyButtonText()
+        {
+            return XRayVisionPlugin.ToggleTooltip.Value == XRayVisionPlugin.Toggle.On ? Localization.instance.Localize(
+                $"\n[<color=yellow><b>{XRayVisionPlugin.CopyHotkey.Value}</b></color>] Copy tooltip contents to clipboard")
+                : Localization.instance.Localize(
+                    $"\n Hide tooltip. While hovering object, press [<color=yellow><b>{XRayVisionPlugin.CopyHotkey.Value}</b></color>] to copy tooltip contents to clipboard");
+        }
+
         private static string GetPrefabString(ZNetView view, bool clean = false)
         {
             return clean
                 ? $"{XRayVisionPlugin.LeftSeperator.Value}Prefab Name{XRayVisionPlugin.RightSeperator.Value}  {(view?.GetPrefabName())}"
-                : $"\n<color={XRayVisionPlugin.PrefabNameColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Prefab Name{XRayVisionPlugin.RightSeperator.Value}  {(view?.GetPrefabName())}</color>";
+                : $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.PrefabNameColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Prefab Name{XRayVisionPlugin.RightSeperator.Value}  {(view?.GetPrefabName())}</color>";
         }
 
         private static string GetPieceString(GameObject obj, bool clean = false)
         {
             return clean
                 ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Piece Name{XRayVisionPlugin.RightSeperator.Value}   {obj.GetComponent<Piece>().m_name}"
-                : $"\n<color={XRayVisionPlugin.PieceNameColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Piece Name{XRayVisionPlugin.RightSeperator.Value}   {obj.GetComponent<Piece>().m_name}</color>";
+                : $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.PieceNameColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Piece Name{XRayVisionPlugin.RightSeperator.Value}   {obj.GetComponent<Piece>().m_name}</color>";
         }
 
         private static string GetItemString(GameObject obj, bool clean = false)
@@ -158,28 +169,28 @@ namespace XRayVision.Utilities
         {
             return clean
                 ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Created{XRayVisionPlugin.RightSeperator.Value}  {DateTimeOffset.Now.AddTicks(view!.m_zdo.m_timeCreated - ZNet.instance.GetTime().Ticks):g}"
-                : $"\n<color={XRayVisionPlugin.CreatedColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Created{XRayVisionPlugin.RightSeperator.Value}  {DateTimeOffset.Now.AddTicks(view!.m_zdo.m_timeCreated - ZNet.instance.GetTime().Ticks):g}</color>";
+                : $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.CreatedColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Created{XRayVisionPlugin.RightSeperator.Value}  {DateTimeOffset.Now.AddTicks(view!.m_zdo.m_timeCreated - ZNet.instance.GetTime().Ticks):g}</color>";
         }
 
         private static string GetCreatorString(ZNetView view, bool clean = false)
         {
             return clean
                 ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Creator ID{XRayVisionPlugin.RightSeperator.Value}  {view.GetZDO().GetLong("creator".GetStableHashCode())}"
-                : $"\n<color={XRayVisionPlugin.CreatorIDColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Creator ID{XRayVisionPlugin.RightSeperator.Value}  {view.GetZDO().GetLong("creator".GetStableHashCode())}</color>"; // Mimic piece component's grabbing of creator
+                : $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.CreatorIDColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Creator ID{XRayVisionPlugin.RightSeperator.Value}  {view.GetZDO().GetLong("creator".GetStableHashCode())}</color>"; // Mimic piece component's grabbing of creator
         }
 
         private static string GetCreatorNameString(ZNetView view, bool clean = false)
         {
             return clean
                 ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Creator Name{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("creatorName")}"
-                : $"\n<color={XRayVisionPlugin.CreatorNameColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Creator Name{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("creatorName")}</color>";
+                : $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.CreatorNameColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Creator Name{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("creatorName")}</color>";
         }
 
         private static string GetZdoOwnerText(ZNetView view, bool clean = false)
         {
             return clean
                 ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Owner{XRayVisionPlugin.RightSeperator.Value}  {GetOwnerText(view)}"
-                : $"\n<color={XRayVisionPlugin.OwnerColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Owner{XRayVisionPlugin.RightSeperator.Value}  {GetOwnerText(view)}</color>";
+                : $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.OwnerColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Owner{XRayVisionPlugin.RightSeperator.Value}  {GetOwnerText(view)}</color>";
         }
 
         private static string GetOwnerText(ZNetView view, bool clean = false)
@@ -201,10 +212,10 @@ namespace XRayVision.Utilities
             if (view.m_zdo.GetString("steamName").Length > 1)
                 return clean
                     ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Creator Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}"
-                    : $"\n<color={XRayVisionPlugin.CreatorSteamInfoColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Creator Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}</color>";
+                    : $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.CreatorSteamInfoColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Creator Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}</color>";
             return clean
                 ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Creator Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamID")}"
-                : $"\n<color={XRayVisionPlugin.CreatorSteamInfoColor.Value}>{XRayVisionPlugin.LeftSeperator.Value}Creator Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamID")}</color>";
+                : $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.CreatorSteamInfoColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Creator Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamID")}</color>";
         }
 
         public static string AddPlayerHoverText(GameObject gobj, ref string __result)
@@ -227,12 +238,12 @@ namespace XRayVision.Utilities
                         if (obj.GetComponent<Player>()
                             .IsCrouching()) // If they are crouching, I still want to see the name.
                             stringBuilder.Append(
-                                $"<color=#00afd4>{XRayVisionPlugin.LeftSeperator.Value}Name{XRayVisionPlugin.RightSeperator.Value}  {(view ? obj.GetComponent<Player>().GetPlayerName() : obj.name)}</color>");
+                                $"<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.CreatorNameColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Name{XRayVisionPlugin.RightSeperator.Value}  {(view ? obj.GetComponent<Player>().GetPlayerName() : obj.name)}</color>");
                         stringBuilder.Append(
-                            $"\n<color=#00afd4>{XRayVisionPlugin.LeftSeperator.Value}Player ID{XRayVisionPlugin.RightSeperator.Value}  {obj.GetComponent<Player>().GetPlayerID()}</color>");
+                            $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.CreatorNameColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Player ID{XRayVisionPlugin.RightSeperator.Value}  {obj.GetComponent<Player>().GetPlayerID()}</color>");
                         stringBuilder
                             .Append(
-                                $"\n<color=#95DBE5FF>{XRayVisionPlugin.LeftSeperator.Value}Last Spawned{XRayVisionPlugin.RightSeperator.Value}  ")
+                                $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.CreatorSteamInfoColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Last Spawned{XRayVisionPlugin.RightSeperator.Value}  ")
                             .Append(
                                 DateTimeOffset.Now
                                     .AddTicks(view.m_zdo.m_timeCreated - ZNet.instance.GetTime().Ticks)
@@ -240,10 +251,10 @@ namespace XRayVision.Utilities
                             .Append("</color>");
                         if (view.m_zdo.GetString("steamName").Length >= 1)
                             stringBuilder.Append(
-                                $"\n<color=#95DBE5FF>{XRayVisionPlugin.LeftSeperator.Value}Player Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}</color>");
+                                $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.CreatorSteamInfoColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Player Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamName")} × {view.m_zdo.GetString("steamID")}</color>");
                         else if (view.m_zdo.GetString("steamID").Length >= 1)
                             stringBuilder.Append(
-                                $"\n<color=#95DBE5FF>{XRayVisionPlugin.LeftSeperator.Value}Player Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamID")}</color>");
+                                $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.CreatorSteamInfoColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Player Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamID")}</color>");
                     }
                     catch
                     {

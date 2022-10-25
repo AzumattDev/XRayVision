@@ -81,25 +81,25 @@ namespace XRayVision
                     new ConfigurationManagerAttributes { Category = "1 - General", Order = 1 }), false);
 
             /* Colors */
-            PrefabNameColor = config("Colors", "Prefab Name Color", "#339E66FF",
+            PrefabNameColor = config("Colors", "Prefab Name Color", new Color(0.2f,0.62f,0.4f,1.0f), //"#339E66FF"
                 new ConfigDescription("Color of the Prefab Name Hover text.", null,
                     new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
-            PieceNameColor = config("Colors", "Piece Name Color", "#339E66FF",
+            PieceNameColor = config("Colors", "Piece Name Color", new Color(0.2f,0.62f,0.4f,1.0f), // "#339E66FF"
                 new ConfigDescription("Color of the Piece Name Hover text.", null,
                     new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
-            CreatedColor = config("Colors", "Created Time Color", "#078282FF",
+            CreatedColor = config("Colors", "Created Time Color", new Color(0.02f,0.51f,0.51f,1.0f), // "#078282FF"
                 new ConfigDescription("Color of the Created Time Hover text.", null,
                     new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
-            CreatorIDColor = config("Colors", "Creator ID Color", "#00afd4",
+            CreatorIDColor = config("Colors", "Creator ID Color", new Color(0.0f,0.686f,0.83f,1.0f),  // "#00afd4"
                 new ConfigDescription("Color of the Creator ID Hover text.", null,
                     new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
-            CreatorNameColor = config("Colors", "Creator Name Color", "#00afd4",
+            CreatorNameColor = config("Colors", "Creator Name Color", new Color(0.0f,0.686f,0.83f,1.0f),  // "#00afd4"
                 new ConfigDescription("Color of the Creator Name Hover text.", null,
                     new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
-            CreatorSteamInfoColor = config("Colors", "Creator Steam Info Color", "#95DBE5FF",
+            CreatorSteamInfoColor = config("Colors", "Creator Steam Info Color", new Color(0.585f,0.858f,0.898f,1.0f),  // "#95DBE5FF"
                 new ConfigDescription("Color of the Steam Information Hover text.", null,
                     new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
-            OwnerColor = config("Colors", "Owner Info Color", "#c1eaf0",
+            OwnerColor = config("Colors", "Owner Info Color", new Color(0.756f,0.917f,0.941f,1.0f),  // "#c1eaf0"
                 new ConfigDescription("Color of the Owner Hover text.", null,
                     new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
 
@@ -289,13 +289,13 @@ namespace XRayVision
         internal static ConfigEntry<Toggle> ToggleTooltip = null!;
         public static ConfigEntry<KeyboardShortcut> DisableVisuals = null!;
         public static ConfigEntry<KeyboardShortcut> CopyHotkey = null!;
-        internal static ConfigEntry<string> PrefabNameColor = null!;
-        internal static ConfigEntry<string> PieceNameColor = null!;
-        internal static ConfigEntry<string> CreatedColor = null!;
-        internal static ConfigEntry<string> CreatorIDColor = null!;
-        internal static ConfigEntry<string> CreatorNameColor = null!;
-        internal static ConfigEntry<string> CreatorSteamInfoColor = null!;
-        internal static ConfigEntry<string> OwnerColor = null!;
+        internal static ConfigEntry<Color> PrefabNameColor = null!;
+        internal static ConfigEntry<Color> PieceNameColor = null!;
+        internal static ConfigEntry<Color> CreatedColor = null!;
+        internal static ConfigEntry<Color> CreatorIDColor = null!;
+        internal static ConfigEntry<Color> CreatorNameColor = null!;
+        internal static ConfigEntry<Color> CreatorSteamInfoColor = null!;
+        internal static ConfigEntry<Color> OwnerColor = null!;
         internal static ConfigEntry<string> LeftSeperator = null!;
         internal static ConfigEntry<string> RightSeperator = null!;
         internal static ConfigEntry<Vector2> ToolTipPosition = null!;

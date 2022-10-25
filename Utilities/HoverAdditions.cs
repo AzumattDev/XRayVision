@@ -60,7 +60,7 @@ namespace XRayVision.Utilities
                     }
                 }
             }
-            else if (XRayVisionPlugin.IsAdmin)
+            else if (XRayVisionPlugin.IsAdmin || XRayVisionPlugin.configSync.IsAdmin)
             {
                 if (tuple.Item1.m_zdo.GetString("steamName").Length > 1 ||
                     tuple.Item1.m_zdo.GetString("steamID").Length > 1)
@@ -84,7 +84,7 @@ namespace XRayVision.Utilities
                     if (XRayVisionPlugin.DisableVisuals.Value.IsDown() &&
                         XRayVisionPlugin.ToggleTooltip.Value == XRayVisionPlugin.Toggle.On)
                     {
-                        XRayVisionPlugin.XRayLogger.LogError(
+                        XRayVisionPlugin.XRayLogger.LogDebug(
                             "XRayVision: HoverTextDisplay is true, attempting to turn off visuals");
                         HoverTextDisplay = false;
                     }
@@ -102,7 +102,7 @@ namespace XRayVision.Utilities
                         (XRayVisionPlugin.ToggleTooltip.Value == XRayVisionPlugin.Toggle.Off &&
                          XRayVisionPlugin.DisableVisuals.Value.IsPressed()))
                     {
-                        XRayVisionPlugin.XRayLogger.LogError(
+                        XRayVisionPlugin.XRayLogger.LogDebug(
                             "XRayVision: HoverTextDisplay is false, attempting to turn on visuals");
                         HoverTextDisplay = true;
                     }
@@ -220,7 +220,7 @@ namespace XRayVision.Utilities
 
         public static string AddPlayerHoverText(GameObject gobj, ref string __result)
         {
-            switch (XRayVisionPlugin.IsAdmin)
+            switch (XRayVisionPlugin.IsAdmin || XRayVisionPlugin.configSync.IsAdmin)
             {
                 /* Colored text examples https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/StyledText.html */
                 case true when HoverTextDisplay:

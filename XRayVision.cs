@@ -37,7 +37,7 @@ namespace XRayVision
         private Harmony? _harmony;
         internal static readonly ManualLogSource XRayLogger = BepInEx.Logging.Logger.CreateLogSource(ModName);
 
-        private static readonly ConfigSync configSync = new(ModName)
+        internal static readonly ConfigSync configSync = new(ModName)
             { DisplayName = ModName, CurrentVersion = ModVersion, MinimumRequiredVersion = ModVersion };
 
         internal static CustomSyncedValue<string> ModeratorPermsConfigData =

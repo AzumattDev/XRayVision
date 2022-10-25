@@ -129,6 +129,7 @@ For Questions or Comments, find me in the Odin Plus Team Discord or in mine:
         hovering the object with the tooltip not visible. This is an attempt to make it easy on you if you have a complex
         shortcut so you don't have to hold them both down at the same time.
 > - Crossplay compatibility updates courtesy of Margmas and I. Should now work just find with those on Game Pass.
+> - Updated ServerSync internally
 > - Update Readme to reflect the changes.
 > ### v1.6.0
 > - Add moderator list.

@@ -20,7 +20,7 @@ namespace XRayVision
     [BepInPlugin(ModGuid, ModName, ModVersion)]
     public class XRayVisionPlugin : BaseUnityPlugin
     {
-        public const string ModVersion = "1.6.0";
+        public const string ModVersion = "2.0.0";
         public const string ModName = "XRayVision";
         internal const string Author = "Azumatt";
         private const string ModGuid = "Azumatt.XRayVision";
@@ -102,6 +102,11 @@ namespace XRayVision
             OwnerColor = config("Colors", "Owner Info Color", new Color(0.756f,0.917f,0.941f,1.0f),  // "#c1eaf0"
                 new ConfigDescription("Color of the Owner Hover text.", null,
                     new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
+            ToolTipBkgColor = config("Attribute Wrapper", "Tooltip Background Color",
+                new Color(0.0f, 0.0f, 0.0f, 0.945f),
+                new ConfigDescription("Color of the background of the tooltip.",
+                    null,
+                    new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
 
             /* Attribute Wrapper */
             LeftSeperator = config("Attribute Wrapper", "Left", "「",
@@ -109,11 +114,6 @@ namespace XRayVision
                     new ConfigurationManagerAttributes { Category = "3 - Attribute Wrapper" }), false);
             RightSeperator = config("Attribute Wrapper", "Right", "」",
                 new ConfigDescription("Text to be shown between the attribute labels and the attribute information.",
-                    null,
-                    new ConfigurationManagerAttributes { Category = "3 - Attribute Wrapper" }), false);
-            ToolTipBkgColor = config("Attribute Wrapper", "Tooltip Background Color",
-                new Color(0.0f, 0.0f, 0.0f, 0.945f),
-                new ConfigDescription("Color of the background of the tooltip.",
                     null,
                     new ConfigurationManagerAttributes { Category = "3 - Attribute Wrapper" }), false);
             ToolTipPosition = config("Attribute Wrapper", "Tooltip Position", new Vector2(-500f, 50f),

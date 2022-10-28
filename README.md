@@ -107,6 +107,8 @@ For Questions or Comments, find me in the Odin Plus Team Discord or in mine:
 
 ***
 > # Update Information (Latest listed first)
+> ### v2.0.1
+> - Update ServerSync internally.
 > ### v.2.0.0
 > - Move the hover information from the hover text to it's own tooltip that you can move around.
 > - Updates to the configuration file that will break old

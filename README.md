@@ -107,6 +107,8 @@ For Questions or Comments, find me in the Odin Plus Team Discord or in mine:
 
 ***
 > # Update Information (Latest listed first)
+> ### v2.0.2
+> - Update ServerSync again.
 > ### v2.0.1
 > - Update ServerSync internally.
 > ### v.2.0.0

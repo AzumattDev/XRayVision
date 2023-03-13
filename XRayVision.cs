@@ -20,7 +20,7 @@ namespace XRayVision
     [BepInPlugin(ModGuid, ModName, ModVersion)]
     public class XRayVisionPlugin : BaseUnityPlugin
     {
-        public const string ModVersion = "2.0.3";
+        public const string ModVersion = "2.0.4";
         public const string ModName = "XRayVision";
         internal const string Author = "Azumatt";
         private const string ModGuid = "Azumatt.XRayVision";

@@ -107,6 +107,8 @@ For Questions or Comments, find me in the Odin Plus Team Discord or in mine:
 
 ***
 > # Update Information (Latest listed first)
+> ### v2.0.4
+> - Update to fix hover text. It's now using TextMeshPro
 > ### v2.0.3
 > - Mistlands Update. Nothing else really changed, just wanted to tag it as compatible.
 > ### v2.0.2

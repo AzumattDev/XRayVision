@@ -16,7 +16,7 @@ namespace XRayVision.Patches
             string steamID = string.Empty;
             if (ZNet.instance.IsServer() && ZNet.instance.IsDedicated())
             {
-                netPeer = ZNet.instance.GetPeer(__instance.m_nview.m_zdo.m_uid.m_userID);
+                netPeer = ZNet.instance.GetPeer(__instance.m_nview.m_zdo.m_uid.UserID);
 
                 if (PlatformUtils.GetPlatform(netPeer) == PrivilegeManager.Platform.Steam)
                 {

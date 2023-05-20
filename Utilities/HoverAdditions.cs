@@ -37,12 +37,12 @@ namespace XRayVision.Utilities
             }
 
             stringBuilder.Append(GetCreationString(tuple.Item1, needItCleanJack));
-            if (tuple.Item1.m_zdo.m_longs != null)
+            if (ZDOExtraData.s_ints.TryGetValue(tuple.Item1.m_zdo.m_uid, out var ints) && ints.Count > 0)
             {
                 stringBuilder.Append(GetCreatorString(tuple.Item1, needItCleanJack));
             }
 
-            if (tuple.Item1.m_zdo.GetString("creatorName").Length > 1)
+            if (tuple.Item1.m_zdo.GetString(ZDOVars.s_creatorName).Length > 1)
             {
                 stringBuilder.Append(GetCreatorNameString(tuple.Item1, needItCleanJack));
             }
@@ -168,8 +168,8 @@ namespace XRayVision.Utilities
         private static string GetCreationString(ZNetView view, bool clean = false)
         {
             return clean
-                ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Created{XRayVisionPlugin.RightSeperator.Value}  {DateTimeOffset.Now.AddTicks(view!.m_zdo.m_timeCreated - ZNet.instance.GetTime().Ticks):g}"
-                : $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.CreatedColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Created{XRayVisionPlugin.RightSeperator.Value}  {DateTimeOffset.Now.AddTicks(view!.m_zdo.m_timeCreated - ZNet.instance.GetTime().Ticks):g}</color>";
+                ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Created{XRayVisionPlugin.RightSeperator.Value}  {DateTimeOffset.Now.AddTicks(ZDOExtraData.GetTimeCreated(view!.m_zdo.m_uid) - ZNet.instance.GetTime().Ticks):g}"
+                : $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.CreatedColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Created{XRayVisionPlugin.RightSeperator.Value}  {DateTimeOffset.Now.AddTicks(ZDOExtraData.GetTimeCreated(view!.m_zdo.m_uid) - ZNet.instance.GetTime().Ticks):g}</color>";
         }
 
         private static string GetCreatorString(ZNetView view, bool clean = false)
@@ -195,7 +195,7 @@ namespace XRayVision.Utilities
 
         private static string GetOwnerText(ZNetView view, bool clean = false)
         {
-            ZNet.PlayerInfo? owner = ZNet.instance.m_players.Where(i => i.m_characterID.userID == view.m_zdo.m_owner)
+            ZNet.PlayerInfo? owner = ZNet.instance.m_players.Where(i => i.m_characterID.UserID == view.m_zdo.GetOwner())
                 .Cast<ZNet.PlayerInfo?>().FirstOrDefault();
 
             if (owner == null)
@@ -204,7 +204,7 @@ namespace XRayVision.Utilities
             }
 
             string ownerIsMe = view.IsOwner() ? "(Me)" : "";
-            return $"{owner?.m_name}, {view.m_zdo.m_owner} {ownerIsMe}";
+            return $"{owner?.m_name}, {view.m_zdo.GetOwner()} {ownerIsMe}";
         }
 
         private static string GetSteamInfoString(ZNetView view, bool clean = false)
@@ -246,7 +246,7 @@ namespace XRayVision.Utilities
                                 $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.CreatorSteamInfoColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Last Spawned{XRayVisionPlugin.RightSeperator.Value}  ")
                             .Append(
                                 DateTimeOffset.Now
-                                    .AddTicks(view.m_zdo.m_timeCreated - ZNet.instance.GetTime().Ticks)
+                                    .AddTicks(ZDOExtraData.GetTimeCreated(view.m_zdo.m_uid) - ZNet.instance.GetTime().Ticks)
                                     .ToString("g"))
                             .Append("</color>");
                         if (view.m_zdo.GetString("steamName").Length >= 1)

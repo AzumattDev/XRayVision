@@ -20,10 +20,10 @@ namespace XRayVision
     [BepInPlugin(ModGuid, ModName, ModVersion)]
     public class XRayVisionPlugin : BaseUnityPlugin
     {
-        public const string ModVersion = "2.0.4";
+        public const string ModVersion = "2.1.4";
         public const string ModName = "XRayVision";
         internal const string Author = "Azumatt";
-        private const string ModGuid = "Azumatt.XRayVision";
+        internal const string ModGuid = "Azumatt.XRayVision";
         private static string ConfigFileName = ModGuid + ".cfg";
         private static string ConfigFileFullPath = Paths.ConfigPath + Path.DirectorySeparatorChar + ConfigFileName;
 
@@ -33,8 +33,9 @@ namespace XRayVision
         internal const string ModbypassFileName = "XRayVision_ModeratorList.yml";
         internal static SortedDictionary<string, ModeratorPerms> ModeratorConfigs = new();
         internal static string ConnectionError = "";
-
-        private Harmony? _harmony;
+        internal static XRayVisionPlugin instance = null!;
+        internal static GameObject RootObject;
+        internal static Harmony? _harmony;
         internal static readonly ManualLogSource XRayLogger = BepInEx.Logging.Logger.CreateLogSource(ModName);
 
         internal static readonly ConfigSync configSync = new(ModName)
@@ -57,6 +58,7 @@ namespace XRayVision
 
         private void Awake()
         {
+            instance = this;
             /* General */
             _serverConfigLocked = config("General", "Force Server Config", Toggle.On,
                 new ConfigDescription("If on, the configuration is locked and can be changed by server admins only.",
@@ -172,6 +174,11 @@ namespace XRayVision
         {
             FileHandler.ModeratorListCreate();
             Game.isModded = true;
+        }
+
+        private void Update()
+        {
+
         }
 
 

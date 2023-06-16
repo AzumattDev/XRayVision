@@ -70,6 +70,7 @@ namespace XRayVision.Utilities
             }
 
             stringBuilder.Append(GetZdoOwnerText(tuple.Item1, needItCleanJack));
+            stringBuilder.Append(GetGameObjectsComponents(tuple.Item2, needItCleanJack));
 
             switch (HoverTextDisplay)
             {
@@ -216,6 +217,20 @@ namespace XRayVision.Utilities
             return clean
                 ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Creator Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamID")}"
                 : $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.CreatorSteamInfoColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Creator Info{XRayVisionPlugin.RightSeperator.Value}  {view.m_zdo.GetString("steamID")}</color>";
+        }
+
+        private static string GetGameObjectsComponents(GameObject obj, bool clean = false)
+        {
+            Component[] components = obj.GetComponents<Component>();
+            StringBuilder stringBuilder = new();
+            foreach (Component component in components)
+            {
+                stringBuilder.Append($"\t\t{component.GetType().Name}{Environment.NewLine}");
+            }
+
+            return clean
+                ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Components{XRayVisionPlugin.RightSeperator.Value}  {Environment.NewLine} {stringBuilder}"
+                : $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.CreatorSteamInfoColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Components{XRayVisionPlugin.RightSeperator.Value}  {Environment.NewLine}{stringBuilder}</color>";
         }
 
         public static string AddPlayerHoverText(GameObject gobj, ref string __result)

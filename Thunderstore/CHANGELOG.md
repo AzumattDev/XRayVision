@@ -1,6 +1,7 @@
 > # Update Information (Latest listed first)
 > ### v2.1.4
-> - Update for Valheim 0.216.5
+> - Update for Valheim 0.216.9
+> - Add the ability to see the components on the object.
 > ### v2.0.4
 > - Update to fix hover text. It's now using TextMeshPro
 > ### v2.0.3

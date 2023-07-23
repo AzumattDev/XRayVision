@@ -20,7 +20,7 @@ namespace XRayVision
     [BepInPlugin(ModGuid, ModName, ModVersion)]
     public class XRayVisionPlugin : BaseUnityPlugin
     {
-        public const string ModVersion = "2.1.4";
+        public const string ModVersion = "2.1.5";
         public const string ModName = "XRayVision";
         internal const string Author = "Azumatt";
         internal const string ModGuid = "Azumatt.XRayVision";
@@ -34,7 +34,7 @@ namespace XRayVision
         internal static SortedDictionary<string, ModeratorPerms> ModeratorConfigs = new();
         internal static string ConnectionError = "";
         internal static XRayVisionPlugin instance = null!;
-        internal static GameObject RootObject;
+        internal static GameObject RootObject = null!;
         internal static Harmony? _harmony;
         internal static readonly ManualLogSource XRayLogger = BepInEx.Logging.Logger.CreateLogSource(ModName);
 
@@ -351,7 +351,7 @@ namespace XRayVision
             public override bool IsValid(object value) => true;
 
             public override string ToDescriptionString() =>
-                "# Acceptable values: " + string.Join(", ", KeyboardShortcut.AllKeyCodes);
+                "# Acceptable values: " + string.Join(", ", UnityInput.Current.SupportedKeyCodes);
         }
 
         #endregion

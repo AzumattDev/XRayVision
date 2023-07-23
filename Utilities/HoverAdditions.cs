@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
+using XRayVision.Patches;
 
 namespace XRayVision.Utilities
 {
@@ -139,8 +140,9 @@ namespace XRayVision.Utilities
 
         private static string GetCopyButtonText()
         {
-            return XRayVisionPlugin.ToggleTooltip.Value == XRayVisionPlugin.Toggle.On ? Localization.instance.Localize(
-                $"\n[<color=yellow><b>{XRayVisionPlugin.CopyHotkey.Value}</b></color>] Copy tooltip contents to clipboard")
+            return XRayVisionPlugin.ToggleTooltip.Value == XRayVisionPlugin.Toggle.On
+                ? Localization.instance.Localize(
+                    $"\n[<color=yellow><b>{XRayVisionPlugin.CopyHotkey.Value}</b></color>] Copy tooltip contents to clipboard")
                 : Localization.instance.Localize(
                     $"\n Hide tooltip. While hovering object, press [<color=yellow><b>{XRayVisionPlugin.CopyHotkey.Value}</b></color>] to copy tooltip contents to clipboard");
         }
@@ -168,9 +170,20 @@ namespace XRayVision.Utilities
 
         private static string GetCreationString(ZNetView view, bool clean = false)
         {
+            long storedTicks = view!.m_zdo.GetLong("xray_created");
+
+            if (storedTicks < DateTimeOffset.MinValue.Ticks || storedTicks > DateTimeOffset.MaxValue.Ticks)
+            {
+                return $"Invalid timestamp: {storedTicks}";
+            }
+
+            DateTimeOffset storedDateTimeOffset = new DateTimeOffset(storedTicks, TimeSpan.Zero);
+            DateTimeOffset localDateTimeOffset = storedDateTimeOffset.ToLocalTime();
+            string formattedDateTime = localDateTimeOffset.ToString("MM/dd/yyyy h:mm tt");
+
             return clean
-                ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Created{XRayVisionPlugin.RightSeperator.Value}  {DateTimeOffset.Now.AddTicks(ZDOExtraData.GetTimeCreated(view!.m_zdo.m_uid) - ZNet.instance.GetTime().Ticks):g}"
-                : $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.CreatedColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Created{XRayVisionPlugin.RightSeperator.Value}  {DateTimeOffset.Now.AddTicks(ZDOExtraData.GetTimeCreated(view!.m_zdo.m_uid) - ZNet.instance.GetTime().Ticks):g}</color>";
+                ? $"\n{XRayVisionPlugin.LeftSeperator.Value}Created{XRayVisionPlugin.RightSeperator.Value}  {formattedDateTime}"
+                : $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.CreatedColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Created{XRayVisionPlugin.RightSeperator.Value}  {formattedDateTime}</color>";
         }
 
         private static string GetCreatorString(ZNetView view, bool clean = false)

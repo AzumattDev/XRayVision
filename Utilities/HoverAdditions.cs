@@ -27,6 +27,7 @@ namespace XRayVision.Utilities
 
             if (!tuple.Item1 || !tuple.Item1.IsValid()) return __result += "\n\n" + stringBuilder;
             stringBuilder.Append(GetPrefabString(tuple.Item1, needItCleanJack));
+            stringBuilder.Append(GetModSource(tuple.Item1, needItCleanJack));
             if (tuple.Item2.GetComponent<Piece>())
             {
                 stringBuilder.Append(GetPieceString(tuple.Item2, needItCleanJack));
@@ -152,6 +153,19 @@ namespace XRayVision.Utilities
             return clean
                 ? $"{XRayVisionPlugin.LeftSeperator.Value}Prefab Name{XRayVisionPlugin.RightSeperator.Value}  {(view?.GetPrefabName())}"
                 : $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.PrefabNameColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Prefab Name{XRayVisionPlugin.RightSeperator.Value}  {(view?.GetPrefabName())}</color>";
+        }
+
+        private static string GetModSource(ZNetView view, bool clean = false)
+        {
+            string? assemblyName = AssetLoadTracker.GetAssemblyForPrefab(view?.GetPrefabName()?.ToLower())?.GetName()?.Name;
+            if (string.IsNullOrWhiteSpace(assemblyName))
+            {
+                assemblyName = "Valheim";
+            }
+
+            return clean
+                ? $"{XRayVisionPlugin.LeftSeperator.Value}Source{XRayVisionPlugin.RightSeperator.Value}  {assemblyName}"
+                : $"\n<color=#{ColorUtility.ToHtmlStringRGBA(XRayVisionPlugin.ModSourceColor.Value)}>{XRayVisionPlugin.LeftSeperator.Value}Source{XRayVisionPlugin.RightSeperator.Value}  {assemblyName}</color>";
         }
 
         private static string GetPieceString(GameObject obj, bool clean = false)

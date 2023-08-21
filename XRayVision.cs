@@ -20,7 +20,7 @@ namespace XRayVision
     [BepInPlugin(ModGuid, ModName, ModVersion)]
     public class XRayVisionPlugin : BaseUnityPlugin
     {
-        public const string ModVersion = "2.1.5";
+        public const string ModVersion = "2.1.6";
         public const string ModName = "XRayVision";
         internal const string Author = "Azumatt";
         internal const string ModGuid = "Azumatt.XRayVision";
@@ -83,25 +83,28 @@ namespace XRayVision
                     new ConfigurationManagerAttributes { Category = "1 - General", Order = 1 }), false);
 
             /* Colors */
-            PrefabNameColor = config("Colors", "Prefab Name Color", new Color(0.2f,0.62f,0.4f,1.0f), //"#339E66FF"
+            PrefabNameColor = config("Colors", "Prefab Name Color", new Color(0.2f, 0.62f, 0.4f, 1.0f), //"#339E66FF"
                 new ConfigDescription("Color of the Prefab Name Hover text.", null,
                     new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
-            PieceNameColor = config("Colors", "Piece Name Color", new Color(0.2f,0.62f,0.4f,1.0f), // "#339E66FF"
+            ModSourceColor = config("Colors", "Mod Source Color", new Color(0.2f, 0.77f, 0.4f, 1.0f), //"#339E66FF"
+                new ConfigDescription("Color of the Mod Source Hover text.", null,
+                    new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
+            PieceNameColor = config("Colors", "Piece Name Color", new Color(0.2f, 1f, 0.4f, 1.0f), // "#339E66FF"
                 new ConfigDescription("Color of the Piece Name Hover text.", null,
                     new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
-            CreatedColor = config("Colors", "Created Time Color", new Color(0.02f,0.51f,0.51f,1.0f), // "#078282FF"
+            CreatedColor = config("Colors", "Created Time Color", new Color(0.02f, 0.51f, 0.51f, 1.0f), // "#078282FF"
                 new ConfigDescription("Color of the Created Time Hover text.", null,
                     new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
-            CreatorIDColor = config("Colors", "Creator ID Color", new Color(0.0f,0.686f,0.83f,1.0f),  // "#00afd4"
+            CreatorIDColor = config("Colors", "Creator ID Color", new Color(0.0f, 0.686f, 0.83f, 1.0f), // "#00afd4"
                 new ConfigDescription("Color of the Creator ID Hover text.", null,
                     new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
-            CreatorNameColor = config("Colors", "Creator Name Color", new Color(0.0f,0.686f,0.83f,1.0f),  // "#00afd4"
+            CreatorNameColor = config("Colors", "Creator Name Color", new Color(0.0f, 0.686f, 0.83f, 1.0f), // "#00afd4"
                 new ConfigDescription("Color of the Creator Name Hover text.", null,
                     new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
-            CreatorSteamInfoColor = config("Colors", "Creator Steam Info Color", new Color(0.585f,0.858f,0.898f,1.0f),  // "#95DBE5FF"
+            CreatorSteamInfoColor = config("Colors", "Creator Steam Info Color", new Color(0.585f, 0.858f, 0.898f, 1.0f), // "#95DBE5FF"
                 new ConfigDescription("Color of the Steam Information Hover text.", null,
                     new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
-            OwnerColor = config("Colors", "Owner Info Color", new Color(0.756f,0.917f,0.941f,1.0f),  // "#c1eaf0"
+            OwnerColor = config("Colors", "Owner Info Color", new Color(0.756f, 0.917f, 0.941f, 1.0f), // "#c1eaf0"
                 new ConfigDescription("Color of the Owner Hover text.", null,
                     new ConfigurationManagerAttributes { Category = "2 - Colors" }), false);
             ToolTipBkgColor = config("Attribute Wrapper", "Tooltip Background Color",
@@ -174,11 +177,8 @@ namespace XRayVision
         {
             FileHandler.ModeratorListCreate();
             Game.isModded = true;
-        }
-
-        private void Update()
-        {
-
+            AssetLoadTracker.MapPrefabsToBundles();
+            AssetLoadTracker.MapBundlesToAssemblies();
         }
 
 
@@ -297,6 +297,7 @@ namespace XRayVision
         public static ConfigEntry<KeyboardShortcut> DisableVisuals = null!;
         public static ConfigEntry<KeyboardShortcut> CopyHotkey = null!;
         internal static ConfigEntry<Color> PrefabNameColor = null!;
+        internal static ConfigEntry<Color> ModSourceColor = null!;
         internal static ConfigEntry<Color> PieceNameColor = null!;
         internal static ConfigEntry<Color> CreatedColor = null!;
         internal static ConfigEntry<Color> CreatorIDColor = null!;

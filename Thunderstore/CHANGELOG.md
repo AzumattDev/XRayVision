@@ -1,6 +1,10 @@
 > # Update Information (Latest listed first)
+> ### v2.1.6
+> - Add in the ability to see the "Source" of a prefab. This is either a mod or the base game. Anything unknown will
+    also be listed as Valheim.
 > ### v2.1.5
-> - Update Creation time. It's not backwards compatible with the old way Valheim did things, but it now stores the time someone builds something in default DateTime format. Then converts it to your local time.
+> - Update Creation time. It's not backwards compatible with the old way Valheim did things, but it now stores the time
+    someone builds something in default DateTime format. Then converts it to your local time.
 > ### v2.1.4
 > - Update for Valheim 0.216.9
 > - Add the ability to see the components on the object.
@@ -16,23 +20,28 @@
 > - Move the hover information from the hover text to it's own tooltip that you can move around.
 > - Updates to the configuration file that will break old
     configs. `Please update your configs. Fresh regenerated configs!`
-> - Changed the `[Colors]` section to now use color and not strings for the codes. Changes how this appears in the BepInEx
+> - Changed the `[Colors]` section to now use color and not strings for the codes. Changes how this appears in the
+    BepInEx
     Configuration Manager. (Gives sliders)
     >   - Added multiple configuration options to the `[General]` section.
-          >     - Toggle Tooltip
->     - Copy Information Shortcut
+    >     - Toggle Tooltip
+    >
+- Copy Information Shortcut
 >   - Added multiple configuration options to the `[Attribute Wrapper]` section.
       >     - Tooltip Position
->     - Tooltip Text Size
+      >
+- Tooltip Text Size
 >     - Tooltip Title Size
 >   - Added multiple configuration options to the `[Colors]` section.
       >     - Tooltip Background Color
->     - Owner Info Color
+      >
+- Owner Info Color
 > - Can now copy the information to your clipboard by pressing the configured shortcut.
 > - Can now optionally change the toggle of the tooltip to a "hold to display" instead of a toggle.
-    >     - Please note: Copying content to your clipboard while you have "hold to display" enabled will require you to be
-            hovering the object with the tooltip not visible. This is an attempt to make it easy on you if you have a complex
-            shortcut so you don't have to hold them both down at the same time.
+    >     - Please note: Copying content to your clipboard while you have "hold to display" enabled will require you to
+    be
+    hovering the object with the tooltip not visible. This is an attempt to make it easy on you if you have a complex
+    shortcut so you don't have to hold them both down at the same time.
 > - Crossplay compatibility updates courtesy of Margmas and I. Should now work just find with those on Game Pass.
 > - Updated ServerSync internally
 > - Update Readme to reflect the changes.

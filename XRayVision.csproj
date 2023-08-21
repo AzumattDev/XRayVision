@@ -113,6 +113,7 @@
         <Compile Include="Patches\Player.cs"/>
         <Compile Include="Patches\WearNTear.cs"/>
         <Compile Include="Patches\ZDOPatches.cs"/>
+        <Compile Include="Utilities\AssetLoadTracker.cs" />
         <Compile Include="Utilities\Definitions.cs"/>
         <Compile Include="Utilities\FileHandler.cs"/>
         <Compile Include="Utilities\HoverAdditions.cs"/>

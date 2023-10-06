@@ -1,9 +1,9 @@
 {
     "name": "XRayVision",
-    "version_number": "2.1.6",
+    "version_number": "2.2.0",
     "website_url": "https://discord.gg/Pb6bVMnFb2",
     "description": "An admin mod to allow admins to see who built what, and some detailed object information. Install on server and all clients for best results.",
     "dependencies": [
-        "denikson-BepInExPack_Valheim-5.4.2105"
+        "denikson-BepInExPack_Valheim-5.4.2200"
     ]
 }

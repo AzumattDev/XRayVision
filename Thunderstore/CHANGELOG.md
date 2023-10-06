@@ -1,4 +1,6 @@
 > # Update Information (Latest listed first)
+> ### v2.2.0
+> - Update for Valehim 0.217.22
 > ### v2.1.6
 > - Add in the ability to see the "Source" of a prefab. This is either a mod or the base game. Anything unknown will
     also be listed as Valheim.

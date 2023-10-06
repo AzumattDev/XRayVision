@@ -104,6 +104,9 @@
         <Reference Include="UnityEngine.UI">
             <HintPath>$(CorlibPath)\UnityEngine.UI.dll</HintPath>
         </Reference>
+        <Reference Include="Unity.TextMeshPro">
+            <HintPath>$(GamePath)\valheim_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+        </Reference>
         <Reference Include="YamlDotNet, Version=11.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
             <HintPath>packages\YamlDotNet.11.2.1\lib\net45\YamlDotNet.dll</HintPath>
         </Reference>
@@ -113,7 +116,7 @@
         <Compile Include="Patches\Player.cs"/>
         <Compile Include="Patches\WearNTear.cs"/>
         <Compile Include="Patches\ZDOPatches.cs"/>
-        <Compile Include="Utilities\AssetLoadTracker.cs" />
+        <Compile Include="Utilities\AssetLoadTracker.cs"/>
         <Compile Include="Utilities\Definitions.cs"/>
         <Compile Include="Utilities\FileHandler.cs"/>
         <Compile Include="Utilities\HoverAdditions.cs"/>

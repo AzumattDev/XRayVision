@@ -1,4 +1,6 @@
 > # Update Information (Latest listed first)
+> ### v2.2.1
+> - Update ServerSync, compiled against 0.217.28
 > ### v2.2.0
 > - Update for Valehim 0.217.22
 > ### v2.1.6

@@ -69,8 +69,8 @@
         <Reference Include="assembly_guiutils">
             <HintPath>$(PublicizedAssembliesPath)\assembly_guiutils_publicized.dll</HintPath>
         </Reference>
-        <Reference Include="assembly_steamworks">
-            <HintPath>$(PublicizedAssembliesPath)\assembly_steamworks_publicized.dll</HintPath>
+        <Reference Include="com.rlabrecque.steamworks.net">
+            <HintPath>$(PublicizedAssembliesPath)\com.rlabrecque.steamworks.net_publicized.dll</HintPath>
         </Reference>
         <Reference Include="assembly_utils">
             <HintPath>$(PublicizedAssembliesPath)\assembly_utils_publicized.dll</HintPath>

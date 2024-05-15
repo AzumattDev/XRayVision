@@ -1,4 +1,6 @@
 > # Update Information (Latest listed first)
+> ### v2.2.3
+> - Recompiled against Ashlands just in case.
 > ### v2.2.2
 > - Update for Valheim 0.217.46
 > ### v2.2.1
